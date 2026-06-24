@@ -36,14 +36,12 @@ export default function InputField({
   const currentType = isPassword && showPassword ? "text" : type;
 
   return (
-    <div className="flex flex-col gap-1.5 w-full max-w-md mb-4 text-left">
+    <div className="flex flex-col gap-1.5 w-full max-w-md mb-2 text-left">
       {/* Label */}
-      {label && (
-        <label className="text-sm font-medium text-gray-700">{label}</label>
-      )}
+      {label && <label className="text-sm text-black">{label}</label>}
 
       {/* Container do Input */}
-      <div className="relative flex items-center w-full bg-white border border-gray-200 rounded-lg shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
+      <div className="relative flex items-center w-full bg-white border border-gray-200 rounded-lg shadow-sm focus-within:border-[#322A6A] focus-within:ring-1 focus-within:ring-[#322A6A] transition-all">
         {iconSrc && (
           <div className="absolute left-3 pointer-events-none select-none">
             <img src={iconSrc} alt={`${icon} icon`} className="w-5 h-5" />
@@ -52,7 +50,7 @@ export default function InputField({
         <input
           type={currentType}
           placeholder={placeholder}
-          className={`w-full py-3 bg-transparent text-gray-800 placeholder-gray-300 outline-none text-base
+          className={`w-full py-3 bg-transparent text-[#322A6A] font-semibold placeholder-gray-300 outline-none text-base
             ${iconSrc ? "pl-11" : "pl-4"} 
             ${isPassword ? "pr-11" : "pr-4"}`}
           {...props}
