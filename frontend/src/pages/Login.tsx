@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import InputField from "../components/input-field/input-field";
 
 export default function Login() {
@@ -37,16 +38,22 @@ export default function Login() {
               Lembrar de mim
             </label>
           </div>
-          <a href="" className="text-sm text-[#322A6A] underline">
+          <Link
+            to="/esqueci-senha"
+            className="text-sm text-[#322A6A] underline"
+          >
             Esqueci minha senha
-          </a>
+          </Link>
         </div>
         <button className="max-w-md w-full my-4 bg-[#322A6A] text-white text-lg py-2 rounded-lg font-bold hover:bg-[#251c61] transition-colors cursor-pointer">
           Entrar
         </button>
-        <a href="" className="text-sm text-[#322A6A] underline">
-          Clique aqui se for seu primeiro acesso{" "}
-        </a>
+        <Link
+          to="/primeiro-acesso"
+          className="text-sm text-[#322A6A] underline"
+        >
+          Clique aqui se for seu primeiro acesso
+        </Link>
       </div>
       <div className="w-1/2 flex items-baseline justify-center">
         <img src="/vetor.png" alt="" className="w-164" />
