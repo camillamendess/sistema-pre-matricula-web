@@ -7,7 +7,7 @@ export default function Login() {
       <div className="w-1/2 flex flex-col items-center justify-center bg-[#F8F8F8] m-0 h-full">
         <img src="/logo.png" alt="Logo da Uesb" className="w-60 mb-6" />
         <h1 className="text-[#322A6A] text-3xl font-bold mb-1">
-          Pré-Matrícula
+          Pré Matrícula
         </h1>
         <h2 className="text-lg mb-4">Sistema Acadêmico</h2>
         <p className="text-base text-[#322A6A] mb-4">
