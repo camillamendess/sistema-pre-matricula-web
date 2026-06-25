@@ -46,12 +46,12 @@ interface SmallCardProps extends ComponentPropsWithoutRef<"button"> {
   variant?: "white" | "blue";
 }
 
-const SmallCard = ({
+export default function SmallCard({
   text,
   icon,
   variant = "white",
   ...props
-}: SmallCardProps) => {
+}: SmallCardProps) {
   const bgClasses = {
     blue: "bg-[#322A6A] hover:bg-[#251c61] text-white",
     white: "bg-[#fff] hover:bg-[#332a6a26] text-[#322A6A]",
@@ -76,6 +76,4 @@ const SmallCard = ({
       <span className="text-lg font-bold leading-tight">{text}</span>
     </button>
   );
-};
-
-export default SmallCard;
+}
