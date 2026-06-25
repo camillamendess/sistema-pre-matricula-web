@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import InputField from "../components/input-field/input-field";
+import InputField from "../components/input-field";
 
 export default function Login() {
   return (
