@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import FirstAccess from "./pages/FirstAccess";
 import ForgotPassword from "./pages/ForgotPassword";
-import HomeAluno from "./pages/HomeAluno";
+import Home from "./pages/Home";
 import EnrollCourses from "./pages/EnrollCourses"; // Import the new page
 import { JSX } from "react/jsx-runtime";
 import Reports from "./pages/Reports";
@@ -31,10 +31,10 @@ function AppRoutes() {
           
           {/* Protected Routes Block */}
           <Route 
-            path="/home-aluno" 
+            path="/home" 
             element={
               <ProtectedRoute>
-                <HomeAluno />
+                <Home />
               </ProtectedRoute>
             } 
           />

@@ -7,42 +7,36 @@ const MOCK_COURSES = [
   {
     id: 1,
     name: "Desenvolvimento de Sistemas Web",
-    teacher: "Stenio Longo Araújo",
     credits: 60,
     department: 'DCET'
   },
   {
     id: 2,
     name: "Programação Concorrente",
-    teacher: "Prof. Me. Santos",
     credits: 60,
     department: 'DCET'
   },
   {
     id: 3,
     name: "Arquitetura de Computadores",
-    teacher: "Prof. Dr. Silva",
     credits: 30,
     department: 'DCET'
   },
   {
     id: 4,
     name: "Desenvolvimento de Sistemas Web",
-    teacher: "Stenio Longo Araújo",
     credits: 60,
     department: 'DCET'
   },
   {
     id: 5,
     name: "Programação Concorrente",
-    teacher: "Prof. Me. Santos",
     credits: 60,
     department: 'DCET'
   },
   {
     id: 6,
     name: "Arquitetura de Computadores",
-    teacher: "Prof. Dr. Silva",
     credits: 30,
     department: 'DCET'
   }
@@ -86,7 +80,6 @@ export default function EnrollCourses() {
               {openAccordion === course.id && (
                 <div className="p-4 border-t border-gray-200 bg-white">
                   <div className="mb-6">
-                    <p className="text-gray-700 font-medium"><strong>Professor(a):</strong> {course.teacher}</p>
                     <p className="text-gray-700 font-medium"><strong>Departamento:</strong> {course.department}</p>
                     <p className="text-gray-700 font-medium"><strong>Créditos:</strong> {course.credits}</p>
                   </div>
@@ -104,7 +97,7 @@ export default function EnrollCourses() {
         </div>
         <br />
         <SmallCard
-            linkTo="/home-aluno"
+            linkTo="/home"
             text="Voltar"
             variant="blue"
         />
