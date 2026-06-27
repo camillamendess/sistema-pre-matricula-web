@@ -4,11 +4,11 @@ import logoUesb from "../assets/uesb-logo-2.png"; // Adjust this path to your ac
 
 // Mock data for the report
 const MOCK_REPORT_DATA = [
-  { id: 1, name: "Arquitetura de Computadores", department: "Ciência da Computação", enrolled: 45 },
-  { id: 2, name: "Programação Concorrente", department: "Ciência da Computação", enrolled: 38 },
-  { id: 3, name: "Lógica Digital", department: "Engenharia", enrolled: 52 },
-  { id: 4, name: "Cálculo I", department: "Matemática", enrolled: 60 },
-  { id: 5, name: "Física Básica", department: "Física", enrolled: 41 },
+  { id: 1, name: "Arquitetura de Computadores", department: "DCET", enrolled: 45 },
+  { id: 2, name: "Programação Concorrente", department: "DCET", enrolled: 38 },
+  { id: 3, name: "Lógica Digital", department: "DCET", enrolled: 52 },
+  { id: 4, name: "Cálculo I", department: "DCET", enrolled: 60 },
+  { id: 5, name: "Física Básica", department: "DCET", enrolled: 41 },
 ];
 
 export default function Reports() {
@@ -192,7 +192,7 @@ export default function Reports() {
               </div>
 
               {/* Download Button (Hidden on print) */}
-              <div className="flex justify-center lg:justify-end print:hidden">
+              <div className="flex justify-center lg:justify-end print:hidden mt-10">
                 <button 
                   onClick={handleDownloadPDF}
                   className="bg-[#322A6A] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#251c61] transition-colors shadow-md flex items-center gap-2"
