@@ -127,7 +127,7 @@ export default function Reports() {
             <div className="flex-col h-full gap-4 relative">
               {/* Scrollable Gray Container */}
               <div 
-                className="hidden lg:flex bg-[#e0e0e0] rounded-[20px] shadow-inner flex-1 overflow-y-auto relative flex justify-center py-10 px-4 print:p-0 print:bg-white print:overflow-visible print:shadow-none print:block"
+                className="hidden lg:flex bg-[#e0e0e0] rounded-[20px] shadow-inner flex-1 overflow-y-auto relative justify-center py-10 px-4 print:p-0 print:bg-white print:overflow-visible print:shadow-none print:block"
                 onScroll={handleScroll}
               >
                 
