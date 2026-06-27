@@ -1,0 +1,107 @@
+const pool = require('../config/database');
+
+class AlunoModel {
+    static async criarAluno(nome, email, matricula, senhaHash) {
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            // 1. Cria o usuário já incluindo o hash da senha
+            const queryUser = `
+                INSERT INTO Usuario (nome, email, senha, tipo_usuario)
+                VALUES ($1, $2, $3, 2)
+                RETURNING id_usuario, nome, email, tipo_usuario
+            `;
+            const resUser = await client.query(queryUser, [nome, email, senhaHash]);
+            const usuario = resUser.rows[0];
+
+            // 2. Cria o aluno associado
+            const queryAluno = `
+                INSERT INTO Aluno (id_usuario, matricula)
+                VALUES ($1, $2)
+                RETURNING id_aluno, matricula
+            `;
+            const resAluno = await client.query(queryAluno, [usuario.id_usuario, matricula]);
+            const aluno = resAluno.rows[0];
+
+            await client.query('COMMIT');
+            return { ...usuario, ...aluno };
+        } catch (error) {
+            await client.query('ROLLBACK');
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async listarTodos() {
+        const query = `
+            SELECT u.id_usuario, u.nome, u.email, u.tipo_usuario, a.id_aluno, a.matricula
+            FROM Aluno a
+            JOIN Usuario u ON a.id_usuario = u.id_usuario
+            WHERE u.tipo_usuario = 2
+            ORDER BY a.id_aluno
+        `;
+        const { rows } = await pool.query(query);
+        return rows;
+    }
+
+    static async buscarPorId(id_aluno) {
+        const query = `
+            SELECT u.id_usuario, u.nome, u.email, u.tipo_usuario, a.id_aluno, a.matricula
+            FROM Aluno a
+            JOIN Usuario u ON a.id_usuario = u.id_usuario
+            WHERE a.id_aluno = $1
+        `;
+        const { rows } = await pool.query(query, [id_aluno]);
+        return rows[0];
+    }
+
+    static async atualizar(id_aluno, nome, email, matricula) {
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            
+            // 1. Descobre o id_usuario vinculado a este aluno
+            const resBusca = await client.query('SELECT id_usuario FROM Aluno WHERE id_aluno = $1', [id_aluno]);
+            if (resBusca.rowCount === 0) throw new Error('Aluno não encontrado.');
+            const id_usuario = resBusca.rows[0].id_usuario;
+
+            // 2. Atualiza Usuario e Aluno
+            await client.query('UPDATE Usuario SET nome = $1, email = $2 WHERE id_usuario = $3', [nome, email, id_usuario]);
+            await client.query('UPDATE Aluno SET matricula = $1 WHERE id_aluno = $2', [matricula, id_aluno]);
+
+            await client.query('COMMIT');
+            return { id_aluno, id_usuario, nome, email, matricula, tipo_usuario: 2 };
+        } catch (error) {
+            await client.query('ROLLBACK');
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async excluir(id_aluno) {
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            
+            const resBusca = await client.query('SELECT id_usuario FROM Aluno WHERE id_aluno = $1', [id_aluno]);
+            if (resBusca.rowCount === 0) throw new Error('Aluno não encontrado.');
+            const id_usuario = resBusca.rows[0].id_usuario;
+
+            // Para respeitar a integridade, deletamos a tabela filha (Aluno) e depois a pai (Usuario)
+            await client.query('DELETE FROM Aluno WHERE id_aluno = $1', [id_aluno]);
+            await client.query('DELETE FROM Usuario WHERE id_usuario = $1', [id_usuario]);
+
+            await client.query('COMMIT');
+            return true;
+        } catch (error) {
+            await client.query('ROLLBACK');
+            throw error; // O erro será disparado se houver matrículas ativas vinculadas ao aluno
+        } finally {
+            client.release();
+        }
+    }
+}
+
+module.exports = AlunoModel;
