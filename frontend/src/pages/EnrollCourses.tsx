@@ -61,7 +61,7 @@ export default function EnrollCourses() {
   return (
     <StudentLayout pageTitle="Disciplinas Disponíveis">
       {/* Required Container: bg #f8f8f8, border-radius 10px, padding 40px */}
-      <div className="bg-[#f8f8f8] rounded-[10px] p-[40px] w-full max-w-5xl">
+      <div className="bg-[#f8f8f8] rounded-[10px] p-10 w-full max-w-5xl">
         <h3 className="text-[#322A6A] text-xl font-bold mb-6">
           Selecione as disciplinas para matrícula
         </h3>
