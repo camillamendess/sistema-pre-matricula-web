@@ -127,13 +127,13 @@ export default function Reports() {
             <div className="flex-col h-full gap-4 relative">
               {/* Scrollable Gray Container */}
               <div 
-                className="hidden lg:flex bg-[#e0e0e0] rounded-[20px] shadow-inner flex-1 overflow-y-auto relative justify-center py-10 px-4 print:p-0 print:bg-white print:overflow-visible print:shadow-none print:block"
+                className="hidden lg:flex max-h-100 bg-[#e0e0e0] rounded-[20px] shadow-inner flex-1 overflow-y-auto relative justify-center py-10 px-4 print:p-0 print:bg-white print:overflow-visible print:shadow-none print:block"
                 onScroll={handleScroll}
               >
                 
                 {/* Floating Message (Hidden on print) */}
                 <div
-                  className={`fixed bottom-1/14 z-10 bg-[#322A6A] text-white px-6 py-2 rounded-full font-medium shadow-md transition-all duration-300 print:hidden ${
+                  className={`absolute bottom-1/14 z-10 bg-[#322A6A] text-white px-6 py-2 rounded-full font-medium shadow-md transition-all duration-200 print:hidden ${
                     isAtTop ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
                   }`}
                 >
@@ -186,7 +186,7 @@ export default function Reports() {
                   <div className="flex-1"></div>
                   
                   <div className="border-t border-black pt-4 mt-12 text-center text-xs text-black">
-                    Documento gerado pelo Sistema Acadêmico - UESB
+                    Documento gerado pelo Sistema Acadêmico de Pre-Matricula - UESB
                   </div>
                 </div>
               </div>
