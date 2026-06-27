@@ -62,18 +62,18 @@ export default function SmallCard({
 
   return (
     <button
-      className={`${bgClasses} w-full max-w-70 px-8 py-10 rounded-2xl flex items-center gap-3 text-left transition-colors cursor-pointer shadow-md relative`}
+      className={`${bgClasses} w-full max-w-70 px-4 py-6 lg:px-8 lg:py-10 rounded-2xl flex items-center gap-3 text-left transition-colors cursor-pointer shadow-md relative`}
       {...props}
     >
       {iconSrc && (
         <img
           src={iconSrc}
           alt={`${icon} icon`}
-          className="w-16 h-16 select-none pointer-events-none"
+          className="w-12 h-12 lg:w-16 lg:h-16 select-none pointer-events-none"
         />
       )}
 
-      <span className="text-lg font-bold leading-tight">{text}</span>
+      <span className=" text-sm lg:text-lg font-bold leading-tight">{text}</span>
     </button>
   );
 }
