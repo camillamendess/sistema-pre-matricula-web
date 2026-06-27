@@ -5,6 +5,7 @@ const alunoRoutes = require('./routes/alunoRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const disciplinaRoutes = require('./routes/disciplinaRoutes');
 const turmaRoutes = require('./routes/turmaRoutes');
+const preMatriculaRoutes = require('./routes/preMatriculaRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/alunos', alunoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/disciplinas', disciplinaRoutes);
-app.use('/api/turmas', turmaRoutes)
+app.use('/api/turmas', turmaRoutes);
+app.use('/api/pre-matriculas', preMatriculaRoutes);
 
 module.exports = app;
