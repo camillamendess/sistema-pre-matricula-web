@@ -4,6 +4,7 @@ const authRoutes = require('./routes/authRoutes');
 const alunoRoutes = require('./routes/alunoRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const disciplinaRoutes = require('./routes/disciplinaRoutes');
+const turmaRoutes = require('./routes/turmaRoutes');
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/alunos', alunoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/disciplinas', disciplinaRoutes);
+app.use('/api/turmas', turmaRoutes)
 
 module.exports = app;
