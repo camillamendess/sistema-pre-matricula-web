@@ -6,6 +6,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import HomeAluno from "./pages/HomeAluno";
 import EnrollCourses from "./pages/EnrollCourses"; // Import the new page
 import { JSX } from "react/jsx-runtime";
+import Reports from "./pages/Reports";
 
 const DEV_BYPASS_AUTH = true;
 
@@ -42,6 +43,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <EnrollCourses />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/relatorios" 
+            element={
+              <ProtectedRoute>
+                <Reports />
               </ProtectedRoute>
             } 
           />
