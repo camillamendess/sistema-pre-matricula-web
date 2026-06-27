@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import LogoUesb from "../../assets/uesb-logo-2.png";
 
 interface SidebarProps {
@@ -5,22 +6,27 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ role }: SidebarProps): React.JSX.Element {
+  const navigate = useNavigate();
+
   const alunoItems = [
-    { label: "Realizar Pré Matrícula", active: true },
-    { label: "Visualizar Pré Matrícula", active: false },
-    { label: "Disciplinas matriculadas", active: false },
-    { label: "Disciplinas disponíveis", active: false },
-    { label: "Dados Cadastrais", active: false },
+    { label: "Realizar Pré Matrícula", active: true, linkTo: "/matricular" },
+    { label: "Visualizar Pré Matrícula", active: false, linkTo: "/ver-matriculas" },
+    { label: "Disciplinas disponíveis", active: false, linkTo: "/disciplinas" },
+    { label: "Dados Cadastrais", active: false, linkTo: "/minha-conta" },
   ];
 
   const adminItems = [
-    { label: "Alunos", active: true },
-    { label: "Disciplinas", active: false },
-    { label: "Turmas", active: false },
-    { label: "Relatórios", active: false },
+    { label: "Alunos", active: true, linkTo: "ver-alunos" },
+    { label: "Disciplinas", active: false, linkTo: "disciplinas" },
+    { label: "Turmas", active: false, linkTo: "ver-turmas" },
+    { label: "Relatórios", active: false, linkTo: "relatorios" },
   ];
 
   const menuItems = role === "admin" ? adminItems : alunoItems;
+
+  const handleClick = (linkTo: string) => {
+    navigate(linkTo)
+  }
 
   return (
     <div className="w-72.25 bg-[#322A6A] h-screen flex flex-col text-white select-none">
@@ -34,6 +40,7 @@ export default function Sidebar({ role }: SidebarProps): React.JSX.Element {
         {menuItems.map((item, index) => (
           <button
             key={index}
+            onClick={() => handleClick(item.linkTo)}
             className={`w-full text-center px-6 py-3.5 text-sm font-medium border-b border-white transition-colors cursor-pointer
               ${index === 0 ? "border-t border-t-white" : ""}
               ${item.active ? "bg-white/10 font-bold" : "hover:bg-white/5"}`}
