@@ -21,6 +21,7 @@ export default function HomeAluno() {
           <div className="flex flex-col md:flex-row lg:flex-col gap-4 lg:gap-6 mt-auto lg:mt-0 lg:w-auto justify-center items-center w-full">
             <div className="flex-none w-fit">
             <SmallCard
+              linkTo="/matricular"
               text="Realizar Pré Matrícula"
               icon="profile"
               variant="blue"
@@ -28,6 +29,7 @@ export default function HomeAluno() {
           </div>
             <div className="flex-none w-fit">
             <SmallCard
+              linkTo="/editar-aluno"
               text="Editar Meus dados"
               icon="add-user"
               variant="blue"
