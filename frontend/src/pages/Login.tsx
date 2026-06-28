@@ -12,14 +12,14 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  
+
   // Estados de feedback visual
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
     setIsLoading(true);
 
     if (!email || !password) {
@@ -46,7 +46,9 @@ export default function Login() {
     } catch (err: any) {
       console.error("Erro ao fazer login", err);
       // Captura a mensagem tratada enviada pela nossa função base de requisições
-      setError("Um erro inesperado ocorreu. Se o problema persistir, entre em contato com suporte@uesb.edu.br.");
+      setError(
+        "Um erro inesperado ocorreu. Se o problema persistir, entre em contato com suporte@uesb.edu.br.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -64,7 +66,10 @@ export default function Login() {
           Faça login para entrar no sistema.
         </p>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md flex flex-col items-center"
+        >
           {error && (
             <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4 text-sm font-medium text-center">
               {error}
@@ -99,7 +104,10 @@ export default function Login() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="accent-[#322A6A] scale-102 cursor-pointer"
               />
-              <label htmlFor="remember" className="text-sm text-gray-800 cursor-pointer">
+              <label
+                htmlFor="remember"
+                className="text-sm text-gray-800 cursor-pointer"
+              >
                 Lembrar de mim
               </label>
             </div>
@@ -110,16 +118,16 @@ export default function Login() {
               Esqueci minha senha
             </Link>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             disabled={isLoading}
             className="w-full bg-[#322A6A] text-white text-lg py-2 rounded-lg font-bold hover:bg-[#251c61] transition-colors cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
           >
             {isLoading ? "Entrando..." : "Entrar"}
           </button>
         </form>
-        
+
         <Link
           to="/primeiro-acesso"
           className="text-sm text-[#322A6A] underline text-center mt-4"
@@ -127,7 +135,7 @@ export default function Login() {
           Clique aqui se for seu primeiro acesso
         </Link>
       </div>
-      
+
       <div className="hidden lg:flex lg:w-1/2 items-baseline justify-center">
         <img src="/vetor.png" alt="" className="w-164" />
       </div>
