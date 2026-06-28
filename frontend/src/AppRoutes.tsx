@@ -8,7 +8,7 @@ import EnrollCourses from "./pages/EnrollCourses"; // Import the new page
 import { JSX } from "react/jsx-runtime";
 import Reports from "./pages/Reports";
 
-const DEV_BYPASS_AUTH = true;
+const DEV_BYPASS_AUTH = false;
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated } = useAuth();
@@ -32,6 +32,14 @@ function AppRoutes() {
           {/* Protected Routes Block */}
           <Route 
             path="/home" 
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin" 
             element={
               <ProtectedRoute>
                 <Home />
