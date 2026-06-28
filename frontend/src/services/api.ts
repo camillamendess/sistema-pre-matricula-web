@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:3333/api"; // Altere para a porta do backend
+const API_BASE_URL = "http://localhost:3000/api"; // Altere para a porta do backend
 
 export async function request<T>(
   endpoint: string,

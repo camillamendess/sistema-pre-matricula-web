@@ -16,10 +16,10 @@ export default function Sidebar({ role }: SidebarProps): React.JSX.Element {
   ];
 
   const adminItems = [
-    { label: "Alunos", active: true, linkTo: "ver-alunos" },
-    { label: "Disciplinas", active: false, linkTo: "disciplinas" },
-    { label: "Turmas", active: false, linkTo: "ver-turmas" },
-    { label: "Relatórios", active: false, linkTo: "relatorios" },
+    { label: "Alunos", active: true, linkTo: "/alunos" },
+    { label: "Disciplinas", active: false, linkTo: "/disciplinas" },
+    { label: "Turmas", active: false, linkTo: "/turmas" },
+    { label: "Relatórios", active: false, linkTo: "/relatorios" },
   ];
 
   const menuItems = role === "admin" ? adminItems : alunoItems;

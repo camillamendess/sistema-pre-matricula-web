@@ -1,5 +1,5 @@
 import { useState } from "react";
-import StudentLayout from "../layouts/StudentLayout"; // Adjust path as needed
+import PagesLayout from "../layouts/PagesLayout"; // Adjust path as needed
 import SmallCard from "../components/small-card";
 
 // 1. Mock data object for courses
@@ -50,7 +50,7 @@ export default function EnrollCourses() {
   };
 
   return (
-    <StudentLayout pageTitle="Disciplinas Disponíveis">
+    <PagesLayout pageTitle="Disciplinas Disponíveis">
       {/* Required Container: bg #f8f8f8, border-radius 10px, padding 40px */}
       <div className="bg-[#f8f8f8] rounded-[10px] p-10 w-full max-w-5xl">
         <h3 className="text-[#322A6A] text-xl font-bold mb-6">
@@ -102,6 +102,6 @@ export default function EnrollCourses() {
             variant="blue"
         />
       </div>
-    </StudentLayout>
+    </PagesLayout>
   );
 }

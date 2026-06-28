@@ -7,6 +7,10 @@ import Home from "./pages/Home";
 import EnrollCourses from "./pages/EnrollCourses"; // Import the new page
 import { JSX } from "react/jsx-runtime";
 import Reports from "./pages/Reports";
+import CadastroAluno from "./pages/CadastroAluno";
+import Alunos from "./pages/Alunos";
+import Disciplinas from "./pages/Disciplinas";
+import Turmas from "./pages/Turmas";
 
 const DEV_BYPASS_AUTH = false;
 
@@ -28,18 +32,11 @@ function AppRoutes() {
           <Route path="/" element={<Login />} />
           <Route path="/primeiro-acesso" element={<FirstAccess />} />
           <Route path="/esqueci-senha" element={<ForgotPassword />} />
+          <Route path="/cadastro" element={<CadastroAluno />} />
           
           {/* Protected Routes Block */}
           <Route 
             path="/home" 
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin" 
             element={
               <ProtectedRoute>
                 <Home />
@@ -53,6 +50,40 @@ function AppRoutes() {
                 <EnrollCourses />
               </ProtectedRoute>
             } 
+          />
+
+          {/* Admin Routes */}
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/alunos" 
+            element={
+              <ProtectedRoute>
+                <Alunos />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/disciplinas" 
+            element={
+              <ProtectedRoute>
+                <Disciplinas />
+              </ProtectedRoute>
+            } 
+          />
+          <Route
+            path="/turmas"
+            element={
+              <ProtectedRoute>
+                <Turmas />
+              </ProtectedRoute>
+            }
           />
           <Route 
             path="/relatorios" 

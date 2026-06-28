@@ -1,15 +1,25 @@
 import { useState, ReactNode } from "react";
 import Sidebar from "../components/sidebar";
 import logOutIcon from "../assets/icons/logout.svg";
+import { useAuth } from "../contexts/AuthContext";
 
 interface StudentLayoutProps {
   children: ReactNode;
   pageTitle: string;
   pageDescription?: string;
+  userType?: "aluno" | "admin";
 }
 
-export default function StudentLayout({ children, pageTitle, pageDescription }: StudentLayoutProps) {
+export default function PagesLayout({ children, pageTitle, pageDescription, userType }: StudentLayoutProps) {
+  const { logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    const wantToLogout = window.confirm("Tem certeza que deseja encerrar a sessão?");
+    if (wantToLogout) {
+      logout();
+    }  
+  }
 
   return (
     <div className="flex h-screen w-full bg-white overflow-hidden relative">
@@ -27,7 +37,7 @@ export default function StudentLayout({ children, pageTitle, pageDescription }: 
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0`}
       >
-        <Sidebar role="aluno" />
+        <Sidebar role={userType || "aluno"} />
       </div>
 
       <main className="flex-1 flex flex-col p-6 lg:p-12 overflow-y-auto w-full h-full relative">
@@ -55,7 +65,7 @@ export default function StudentLayout({ children, pageTitle, pageDescription }: 
             </header>
           </div>
 
-          <button className="flex items-center gap-2 text-[#322A6A] hover:text-[#272057] transition-colors cursor-pointer font-medium text-sm lg:absolute lg:top-12 lg:right-12">
+          <button onClick={() => handleLogout()} className="flex items-center gap-2 text-[#322A6A] hover:text-[#272057] transition-colors cursor-pointer font-medium text-sm lg:absolute lg:top-12 lg:right-12">
             <span className="hidden lg:inline">Encerrar Sessão</span>
             <img src={logOutIcon} alt="Logout" className="w-6 h-6 lg:w-5 lg:h-5" />
           </button>

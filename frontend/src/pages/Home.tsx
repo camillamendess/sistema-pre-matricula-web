@@ -1,42 +1,18 @@
 import { useEffect, useState } from "react";
 import LargeCard from "../components/large-card";
 import SmallCard from "../components/small-card";
-import StudentLayout from "../layouts/StudentLayout";
+import PagesLayout from "../layouts/PagesLayout";
 import { UsuarioController } from "../controllers/UsuarioController";
 import { UsuarioModel } from "../models/UsuarioModel";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Home() {
-  const [user, setUser] = useState<UsuarioModel | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
-
-  if (!user) {
-    navigate("/login");
-  }
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (!user) {
-          throw new Error("Usuário não encontrado");
-        }
-
-        const userData = await UsuarioController.buscar(user.id_usuario || 0);
-        setUser(userData);
-      } catch (error) {
-        console.error("Erro ao carregar dados do usuário", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [user]);
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <StudentLayout 
+      <PagesLayout 
         pageTitle="Carregando..." 
         pageDescription="Buscando informações do usuário."
       >
@@ -45,17 +21,18 @@ export default function Home() {
             Carregando seus dados...
           </div>
         </div>
-      </StudentLayout>
+      </PagesLayout>
     );
   }
 
   // Fallback to "Aluno" if for some reason the name doesn't load
-  const displayTitle = user ? `Olá, ${user.nome.split(" ")[0]}!` : "Olá, Aluno!";
+  const displayTitle = user ? `Olá, ${user.nome.split(" ")[0]}!` : "Página do Administrador";
 
   return (
-    <StudentLayout 
+    <PagesLayout 
       pageTitle={displayTitle} 
       pageDescription="Realize sua pré-matrícula nas disciplinas do semestre."
+      userType={user?.tipo_usuario === 1 ? "admin" : "aluno"} // Passa o tipo de usuário para o layout
     >
       <div className="flex flex-col lg:flex-row gap-8 flex-1 h-full pb-4 lg:pb-0">
         <div className="flex-1 flex flex-col justify-center lg:justify-start">
@@ -86,6 +63,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </StudentLayout>
+    </PagesLayout>
   );
 }

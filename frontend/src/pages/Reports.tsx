@@ -1,6 +1,8 @@
 import { useState, useRef, UIEvent } from "react";
-import StudentLayout from "../layouts/StudentLayout";
+import PagesLayout from "../layouts/PagesLayout";
 import logoUesb from "../assets/uesb-logo-2.png"; // Adjust this path to your actual logo asset
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for the report
 const MOCK_REPORT_DATA = [
@@ -12,6 +14,14 @@ const MOCK_REPORT_DATA = [
 ];
 
 export default function Reports() {
+  const {user} = useAuth();
+  const navigate = useNavigate();
+
+  if (user?.tipo_usuario !== 1) {
+    // Redirect non-admin users to the home page
+    navigate("/");
+  }
+
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSort, setSelectedSort] = useState("");
   const [isAtTop, setIsAtTop] = useState(true);
@@ -46,9 +56,10 @@ export default function Reports() {
   };
 
   return (
-    <StudentLayout
+    <PagesLayout
       pageTitle="Gerar Relatórios"
       pageDescription="Configure e visualize relatórios de matrículas."
+      userType={user?.tipo_usuario === 1 ? "admin" : "aluno"} // Passa o tipo de usuário para o layout
     >
       <div className="flex flex-col gap-8 w-full max-w-6xl h-full pb-10">
         
@@ -230,6 +241,6 @@ export default function Reports() {
           }
         }
       `}</style>
-    </StudentLayout>
+    </PagesLayout>
   );
 }
