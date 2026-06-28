@@ -1,24 +1,61 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { UsuarioModel } from "../models/UsuarioModel";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  user: UsuarioModel | null;
+  login: (token: string, usuario: UsuarioModel) => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Começa como false (não logado)
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<UsuarioModel | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
+  // Verifica se já existe uma sessão ativa ao carregar a aplicação
+  useEffect(() => {
+    const storedToken = localStorage.getItem("@SistemaAcademico:token");
+    const storedUser = localStorage.getItem("@SistemaAcademico:user");
+
+    if (storedToken && storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        // Se houver dados corrompidos no localStorage, limpa a sessão
+        localStorage.removeItem("@SistemaAcademico:token");
+        localStorage.removeItem("@SistemaAcademico:user");
+      }
+    }
+    setIsLoading(false);
+  }, []);
+
+  const login = (token: string, usuario: UsuarioModel) => {
+    localStorage.setItem("@SistemaAcademico:token", token);
+    localStorage.setItem("@SistemaAcademico:user", JSON.stringify(usuario));
+    setUser(usuario);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("@SistemaAcademico:token");
+    localStorage.removeItem("@SistemaAcademico:user");
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {/* renderiza os componentes filhos */}
-      {children}
+    <AuthContext.Provider 
+      value={{ 
+        isAuthenticated: !!user, 
+        user, 
+        login, 
+        logout, 
+        isLoading 
+      }}
+    >
+      {/* Evita renderizar as rotas protegidas antes de checar o localStorage */}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 }

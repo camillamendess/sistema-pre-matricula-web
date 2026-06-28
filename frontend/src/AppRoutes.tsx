@@ -39,6 +39,14 @@ function AppRoutes() {
             } 
           />
           <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/matricular" 
             element={
               <ProtectedRoute>

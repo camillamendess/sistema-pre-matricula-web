@@ -2,6 +2,7 @@ import { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputField from "../components/input-field";
 import { useAuth } from "../contexts/AuthContext";
+import { UsuarioController } from "../controllers/UsuarioController";
 
 export default function Login() {
   const { login } = useAuth();
@@ -18,44 +19,34 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError(""); // Limpa erros anteriores
+    setError(""); 
     setIsLoading(true);
 
+    if (!email || !password) {
+      setError("Por favor, preencha todos os campos obrigatórios.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Ajuste a URL base conforme a porta que o seu Node.js (Express) estiver rodando
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, senha: password }),
-      });
+      // Utiliza o controller que centraliza as regras e mapeamentos de atributos
+      const data = await UsuarioController.login(email, password);
 
-      const data = await response.json();
+      // Repassa as credenciais validadas para o contexto gerenciar globalmente
+      login(data.token, data.usuario);
 
-      if (!response.ok) {
-        // Se a resposta não for 2xx (ex: 401 Unauthorized do seu AuthController)
-        throw new Error();
+      // Redirecionamento baseado no tipo do usuário vindo do backend
+      if (data.usuario.tipo_usuario === 2) {
+        navigate("/home");
+      } else if (data.usuario.tipo_usuario === 1) {
+        navigate("/admin"); // Ajuste para a sua rota de Admin/Colegiado
+      } else {
+        setError("Tipo de usuário inválido ou não identificado.");
       }
-
-      // Lógica do "Lembrar de mim":
-      // Se marcado, salva em localStorage (persiste após fechar o navegador).
-      // Se não, salva em sessionStorage (limpa ao fechar a aba).
-      const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem("@App:token", data.token); // Ajuste a chave conforme seu AuthContext
-      if (data.usuario) {
-        storage.setItem("@App:user", JSON.stringify(data.usuario));
-      }
-
-      // Atualiza o contexto de autenticação com os dados recebidos
-      login(data);
-
-      // Redireciona o usuário para a página home
-      navigate("/home");
-
-    } catch (err) {
-      // Mensagem amigável padronizada para falha de login
-      setError("E-mail ou senha incorretos.");
+    } catch (err: any) {
+      console.error("Erro ao fazer login", err);
+      // Captura a mensagem tratada enviada pela nossa função base de requisições
+      setError("Um erro inesperado ocorreu. Se o problema persistir, entre em contato com suporte@uesb.edu.br.");
     } finally {
       setIsLoading(false);
     }
@@ -69,28 +60,24 @@ export default function Login() {
           Pré Matrícula
         </h1>
         <h2 className="text-lg mb-4">Sistema Acadêmico</h2>
-        <p className="text-base text-[#322A6A] mb-4 text-center">
+        <p className="text-base text-[#322A6A] mb-4">
           Faça login para entrar no sistema.
         </p>
-        
-        {/* Formulário com onSubmit */}
+
         <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col items-center">
-          
-          {/* Exibição condicional da mensagem de erro */}
           {error && (
-            <div className="w-full mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-center text-sm font-medium border border-red-200">
+            <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4 text-sm font-medium text-center">
               {error}
             </div>
           )}
 
-          {/* Assumindo que seu InputField aceite as props value e onChange */}
           <InputField
-            label="E-mail*"
+            label="Usuário (E-mail)*"
             type="email"
-            placeholder="Digite seu e-mail"
+            placeholder="Digite seu e-mail cadastrado"
             icon="user"
             value={email}
-            onChange={(e: any) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <InputField
@@ -99,11 +86,11 @@ export default function Login() {
             placeholder="Digite sua senha"
             icon="lock"
             value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          
-          <div className="w-full flex justify-between items-center m-0 mb-4">
-            <div className="flex gap-1.5 ml-2 items-center">
+
+          <div className="w-full max-w-md flex justify-between items-center m-0 mb-2">
+            <div className="flex gap-1.5 ml-2">
               <input
                 type="checkbox"
                 id="remember"
@@ -124,7 +111,6 @@ export default function Login() {
             </Link>
           </div>
           
-          {/* Botão do tipo submit */}
           <button 
             type="submit" 
             disabled={isLoading}
