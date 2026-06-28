@@ -2,17 +2,27 @@ import { useEffect, useState } from "react";
 import LargeCard from "../components/large-card";
 import SmallCard from "../components/small-card";
 import StudentLayout from "../layouts/StudentLayout";
-import { UserController } from "../controllers/UserController";
-import { UserModel } from "../models/UserModel";
+import { UsuarioController } from "../controllers/UsuarioController";
+import { UsuarioModel } from "../models/UsuarioModel";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const [user, setUser] = useState<UserModel | null>(null);
+  const [user, setUser] = useState<UsuarioModel | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+  if (!user) {
+    navigate("/login");
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await UserController.getCurrentUser();
+        if (!user) {
+          throw new Error("Usuário não encontrado");
+        }
+
+        const userData = await UsuarioController.buscar(user.id_usuario || 0);
         setUser(userData);
       } catch (error) {
         console.error("Erro ao carregar dados do usuário", error);
@@ -22,7 +32,7 @@ export default function Home() {
     };
 
     fetchUser();
-  }, []);
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -40,7 +50,7 @@ export default function Home() {
   }
 
   // Fallback to "Aluno" if for some reason the name doesn't load
-  const displayTitle = user ? `Olá, ${user.name.split(" ")[0]}!` : "Olá, Aluno!";
+  const displayTitle = user ? `Olá, ${user.nome.split(" ")[0]}!` : "Olá, Aluno!";
 
   return (
     <StudentLayout 
