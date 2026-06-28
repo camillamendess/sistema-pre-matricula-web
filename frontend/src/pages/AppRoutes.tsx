@@ -4,15 +4,13 @@ import Login from "./pages/Login";
 import FirstAccess from "./pages/FirstAccess";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
-import RealizarMatriculas from "./pages/RealizarMatriculas"; // Import the new page
+import EnrollCourses from "./pages/EnrollCourses"; // Import the new page
 import { JSX } from "react/jsx-runtime";
 import Reports from "./pages/Reports";
 import CadastroAluno from "./pages/CadastroAluno";
 import Alunos from "./pages/Alunos";
 import Disciplinas from "./pages/Disciplinas";
 import Turmas from "./pages/Turmas";
-import Matriculas from "./pages/Matriculas";
-import Perfil from "./pages/Perfil";
 
 const DEV_BYPASS_AUTH = false;
 
@@ -49,15 +47,15 @@ function AppRoutes() {
             path="/matricular" 
             element={
               <ProtectedRoute>
-                <RealizarMatriculas />
+                <EnrollCourses />
               </ProtectedRoute>
             } 
           />
           <Route 
-            path="/matriculas" 
+            path="/pre-matriculas" 
             element={
               <ProtectedRoute>
-                <Matriculas />
+                <EnrollCourses />
               </ProtectedRoute>
             } 
           />
@@ -65,7 +63,7 @@ function AppRoutes() {
             path="/perfil" 
             element={
               <ProtectedRoute>
-                <Perfil />
+                <EnrollCourses />
               </ProtectedRoute>
             } 
           />

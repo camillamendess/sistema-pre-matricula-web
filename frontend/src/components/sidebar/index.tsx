@@ -10,9 +10,9 @@ export default function Sidebar({ role }: SidebarProps): React.JSX.Element {
 
   const alunoItems = [
     { label: "Realizar Pré Matrícula", active: true, linkTo: "/matricular" },
-    { label: "Visualizar Pré Matrícula", active: false, linkTo: "/ver-matriculas" },
+    { label: "Visualizar Pré Matrícula", active: false, linkTo: "/matriculas" },
     { label: "Disciplinas disponíveis", active: false, linkTo: "/disciplinas" },
-    { label: "Dados Cadastrais", active: false, linkTo: "/minha-conta" },
+    { label: "Dados Cadastrais", active: false, linkTo: "/perfil" },
   ];
 
   const adminItems = [
