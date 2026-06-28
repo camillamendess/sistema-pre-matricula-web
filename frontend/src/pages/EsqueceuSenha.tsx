@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import InputField from "../components/input-field";
 
-export default function ForgotPassword() {
+export default function EsqueceuSenha() {
   return (
     <div className="flex h-screen items-center justify-center w-full">
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center bg-[#F8F8F8] m-0 h-full px-6">
@@ -30,7 +30,7 @@ export default function ForgotPassword() {
           Voltar para o Login
         </Link>
       </div>
-      
+
       {/* Hidden on screens smaller than 1024px */}
       <div className="hidden lg:flex lg:w-1/2 items-baseline justify-center">
         <img src="/vetor.png" alt="" className="w-164" />

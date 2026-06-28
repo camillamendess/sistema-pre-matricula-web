@@ -1,13 +1,5 @@
-import PagesLayout from "../layouts/PagesLayout";
+import ConsultaAdmin from "./ConsultaAdmin";
 
 export default function Alunos() {
-  return (
-    <PagesLayout
-        pageTitle="Alunos"
-        pageDescription="Visualize e gerencie os alunos cadastrados no sistema."
-        userType="admin"
-    >
-        <div>Lista de Alunos</div>
-    </PagesLayout>
-  )
+  return <ConsultaAdmin tipo="alunos" />;
 }
