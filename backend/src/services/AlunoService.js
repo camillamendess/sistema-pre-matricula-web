@@ -18,13 +18,19 @@ class AlunoService {
         return novoAluno;
     }
 
-    static async listarAlunos() {
-        return await AlunoModel.listarTodos();
+    static async listarAlunos(filtros = {}) {
+        return await AlunoModel.listarTodos(filtros);
     }
 
     static async buscarAluno(id_aluno) {
         const aluno = await AlunoModel.buscarPorId(id_aluno);
         if (!aluno) throw new Error('Aluno não encontrado.');
+        return aluno;
+    }
+
+    static async buscarAlunoPorUsuario(id_usuario) {
+        const aluno = await AlunoModel.buscarPorUsuarioId(id_usuario);
+        if (!aluno) throw new Error('Aluno nao encontrado para o usuario autenticado.');
         return aluno;
     }
 

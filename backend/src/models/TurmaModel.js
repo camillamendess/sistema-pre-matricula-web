@@ -11,14 +11,44 @@ class TurmaModel {
         return rows[0];
     }
 
-    static async listarTodas() {
+    static async listarTodas(filtros = {}) {
+        const conditions = [];
+        const values = [];
+
+        if (filtros.codigo_turma) {
+            values.push(`%${filtros.codigo_turma}%`);
+            conditions.push(`t.codigo_turma ILIKE $${values.length}`);
+        }
+
+        if (filtros.periodo_letivo) {
+            values.push(`%${filtros.periodo_letivo}%`);
+            conditions.push(`t.periodo_letivo ILIKE $${values.length}`);
+        }
+
+        if (filtros.id_disciplina) {
+            values.push(filtros.id_disciplina);
+            conditions.push(`t.id_disciplina = $${values.length}`);
+        }
+
+        if (filtros.nome_disciplina) {
+            values.push(`%${filtros.nome_disciplina}%`);
+            conditions.push(`d.nome ILIKE $${values.length}`);
+        }
+
+        if (filtros.codigo_disciplina) {
+            values.push(`%${filtros.codigo_disciplina}%`);
+            conditions.push(`d.codigo ILIKE $${values.length}`);
+        }
+
+        const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
         const query = `
             SELECT t.id_turma, t.codigo_turma, t.periodo_letivo, d.id_disciplina, d.codigo AS codigo_disciplina, d.nome AS nome_disciplina
             FROM Turma t
             JOIN Disciplina d ON t.id_disciplina = d.id_disciplina
+            ${whereClause}
             ORDER BY t.periodo_letivo DESC, d.nome ASC
         `;
-        const { rows } = await pool.query(query);
+        const { rows } = await pool.query(query, values);
         return rows;
     }
 

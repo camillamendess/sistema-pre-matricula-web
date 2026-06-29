@@ -6,6 +6,24 @@ interface AuthResponse {
   usuario: UsuarioModel;
 }
 
+interface UsuarioFiltros {
+  nome?: string;
+  email?: string;
+  tipo_usuario?: number;
+}
+
+function buildQuery(params: object): string {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") {
+      searchParams.append(key, String(value));
+    }
+  });
+
+  const query = searchParams.toString();
+  return query ? `?${query}` : "";
+}
+
 export class UsuarioController {
   static async login(email: string, senha: string): Promise<AuthResponse> {
     const data = await request<AuthResponse>("/auth/login", {
@@ -26,8 +44,8 @@ export class UsuarioController {
     });
   }
 
-  static async listar(): Promise<UsuarioModel[]> {
-    return request<UsuarioModel[]>("/usuarios");
+  static async listar(filtros: UsuarioFiltros = {}): Promise<UsuarioModel[]> {
+    return request<UsuarioModel[]>(`/usuarios${buildQuery(filtros)}`);
   }
 
   static async buscar(id: number): Promise<UsuarioModel> {

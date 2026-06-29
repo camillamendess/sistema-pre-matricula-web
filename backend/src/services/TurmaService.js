@@ -18,8 +18,8 @@ class TurmaService {
         return await TurmaModel.criar(id_disciplina, codigo_turma, periodo_letivo);
     }
 
-    static async listarTurmas() {
-        return await TurmaModel.listarTodas();
+    static async listarTurmas(filtros = {}) {
+        return await TurmaModel.listarTodas(filtros);
     }
 
     static async buscarTurma(id_turma) {

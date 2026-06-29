@@ -1,17 +1,23 @@
 const PreMatriculaService = require('../services/PreMatriculaService');
+const AlunoService = require('../services/AlunoService');
 
 class PreMatriculaController {
     static async cadastrar(req, res) {
         try {
             const body = req.body || {};
-            const { id_aluno, id_turma } = body;
+            const { id_turma } = body;
 
-            if (!id_aluno || !id_turma) {
-                return res.status(400).json({ erro: 'Os campos id_aluno e id_turma são obrigatórios.' });
+            if (!id_turma) {
+                return res.status(400).json({ erro: 'O campo id_turma e obrigatorio.' });
             }
 
-            const novaMatricula = await PreMatriculaService.realizarPreMatricula(parseInt(id_aluno), parseInt(id_turma));
-            return res.status(201).json({ mensagem: 'Pré-matrícula realizada com sucesso!', matricula: novaMatricula });
+            const alunoAutenticado = await AlunoService.buscarAlunoPorUsuario(req.usuario.id_usuario);
+            const novaMatricula = await PreMatriculaService.realizarPreMatricula(
+                parseInt(alunoAutenticado.id_aluno),
+                parseInt(id_turma)
+            );
+
+            return res.status(201).json({ mensagem: 'Pre-matricula realizada com sucesso!', matricula: novaMatricula });
         } catch (error) {
             return res.status(400).json({ erro: error.message });
         }
@@ -30,7 +36,6 @@ class PreMatriculaController {
         try {
             const { id_turma, ordenarPor, ordem } = req.query;
 
-            // Tratamento e conversão dos dados recebidos
             const filtroTurma = id_turma ? parseInt(id_turma) : null;
             const parametroOrdenarPor = ordenarPor === 'alunos' ? 'alunos' : 'disciplina';
             const parametroOrdem = ordem?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
@@ -43,7 +48,7 @@ class PreMatriculaController {
 
             return res.status(200).json(dadosRelatorio);
         } catch (error) {
-            return res.status(500).json({ erro: 'Erro interno ao gerar o relatório do colegiado.' });
+            return res.status(500).json({ erro: 'Erro interno ao gerar o relatorio do colegiado.' });
         }
     }
 
@@ -51,7 +56,7 @@ class PreMatriculaController {
         try {
             const { id } = req.params;
             await PreMatriculaService.cancelarPreMatricula(parseInt(id));
-            return res.status(200).json({ mensagem: 'Pré-matrícula cancelada com sucesso.' });
+            return res.status(200).json({ mensagem: 'Pre-matricula cancelada com sucesso.' });
         } catch (error) {
             return res.status(400).json({ erro: error.message });
         }

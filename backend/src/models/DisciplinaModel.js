@@ -11,9 +11,33 @@ class DisciplinaModel {
         return rows[0];
     }
 
-    static async listarTodas() {
-        const query = 'SELECT * FROM Disciplina ORDER BY id_disciplina';
-        const { rows } = await pool.query(query);
+    static async listarTodas(filtros = {}) {
+        const conditions = [];
+        const values = [];
+
+        if (filtros.codigo) {
+            values.push(`%${filtros.codigo}%`);
+            conditions.push(`codigo ILIKE $${values.length}`);
+        }
+
+        if (filtros.nome) {
+            values.push(`%${filtros.nome}%`);
+            conditions.push(`nome ILIKE $${values.length}`);
+        }
+
+        if (filtros.departamento) {
+            values.push(`%${filtros.departamento}%`);
+            conditions.push(`departamento ILIKE $${values.length}`);
+        }
+
+        if (filtros.creditos !== undefined) {
+            values.push(filtros.creditos);
+            conditions.push(`creditos = $${values.length}`);
+        }
+
+        const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+        const query = `SELECT * FROM Disciplina ${whereClause} ORDER BY id_disciplina`;
+        const { rows } = await pool.query(query, values);
         return rows;
     }
 
