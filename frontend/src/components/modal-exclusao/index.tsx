@@ -24,7 +24,7 @@ export default function ModalExclusao({
   }[tipo];
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-[999] p-4">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-999 p-4">
       <div className="bg-white rounded-4xl w-full max-w-lg p-8 shadow-2xl flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
         <h4 className="text-[#1A1A1A] font-bold text-center text-lg md:text-xl mb-6">
           Tem certeza que deseja EXCLUIR {textoExcluir}

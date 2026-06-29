@@ -10,7 +10,9 @@ import { TurmaController } from "../controllers/TurmaController";
 import { AlunoModel } from "../models/AlunoModel";
 import { DisciplinaModel } from "../models/DisciplinaModel";
 import { TurmaModel } from "../models/TurmaModel";
-import ModalExclusao from "../components/modal-exclusao/modal-exclusao";
+import ModalExclusao from "../components/modal-exclusao";
+import ModalEdicao from "../components/modal-edicao";
+import PopupNotificacao from "../components/popup-notificacao";
 
 interface ConsultaAdminProps {
   tipo: "alunos" | "disciplinas" | "turmas";
@@ -25,9 +27,18 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemParaExcluir, setItemParaExcluir] = useState<any | null>(null);
 
+  const [isModalEdicaoOpen, setIsModalEdicaoOpen] = useState(false);
+  const [itemParaEditar, setItemParaEditar] = useState<any | null>(null);
+
   const [alunos, setAlunos] = useState<AlunoModel[]>([]);
   const [disciplinas, setDisciplinas] = useState<DisciplinaModel[]>([]);
   const [turmas, setTurmas] = useState<TurmaModel[]>([]);
+
+  const [popup, setPopup] = useState({
+    isOpen: false,
+    tipo: "sucesso" as "sucesso" | "erro",
+    mensagem: "",
+  });
 
   const carregarDados = async () => {
     setLoading(true);
@@ -121,6 +132,11 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
     setIsModalOpen(true);
   };
 
+  const handleAbrirModalEdicao = (item: any) => {
+    setItemParaEditar(item);
+    setIsModalEdicaoOpen(true);
+  };
+
   const handleConfirmarExclusao = async () => {
     if (!itemParaExcluir) return;
     try {
@@ -131,12 +147,15 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
       } else if (tipo === "turmas") {
         await TurmaController.excluir(itemParaExcluir.id_turma);
       }
-      alert("Excluído com sucesso!");
       setIsModalOpen(false);
       setItemParaExcluir(null);
       carregarDados();
     } catch (error) {
-      alert("Erro ao excluir o registro.");
+      setPopup({
+        isOpen: true,
+        tipo: "erro",
+        mensagem: "Erro ao tentar excluir.",
+      });
     }
   };
 
@@ -194,7 +213,7 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
               Nenhum registro encontrado na base de dados.
             </p>
           ) : (
-            <div className="w-full h-100 bg-[#F8F9FA] rounded-3xl border border-gray-100 shadow-xl p-6 flex flex-col">
+            <div className="w-full max-h-110 bg-[#F8F9FA] rounded-3xl border border-gray-100 shadow-xl p-6 flex flex-col">
               <div className="flex-none">
                 <h3 className="text-[#322A6A] font-bold text-center text-base mb-5">
                   Listagem de {tipo} ({resultados.length})
@@ -205,7 +224,7 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
                 {resultados.map((item: any, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between py-3.5 px-4 rounded-xl border-b border-gray-200/60 last:border-none transition-colors text-[#322A6A] hover:bg-gray-100/50"
+                    className="flex items-center justify-between py-3.5 px-4 rounded-xl border-b border-gray-200/60 last:border-none transition-colors text-[#322A6A] hover:bg-gray-200"
                   >
                     <button
                       type="button"
@@ -261,6 +280,21 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
           item={itemParaExcluir}
           onClose={() => setIsModalOpen(false)}
           onConfirm={handleConfirmarExclusao}
+        />
+
+        <ModalEdicao
+          isOpen={isModalEdicaoOpen}
+          tipo={tipo}
+          item={itemParaEditar}
+          onClose={() => setIsModalEdicaoOpen(false)}
+          onRefresh={carregarDados} // Recarrega a tabela após editar
+        />
+
+        <PopupNotificacao
+          isOpen={popup.isOpen}
+          tipo={popup.tipo}
+          mensagem={popup.mensagem}
+          onClose={() => setPopup((prev) => ({ ...prev, isOpen: false }))}
         />
       </div>
     </PagesLayout>
