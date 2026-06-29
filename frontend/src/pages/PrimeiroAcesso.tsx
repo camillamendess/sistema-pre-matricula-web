@@ -2,7 +2,7 @@ import { useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import InputField from "../components/input-field";
 
-export default function FirstAccess() {
+export default function PrimeiroAcesso() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -10,7 +10,7 @@ export default function FirstAccess() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     // Limpa mensagens anteriores
     setError("");
     setSuccess("");
@@ -24,27 +24,34 @@ export default function FirstAccess() {
 
     try {
       // Ajuste a URL e porta para a rota exata do seu backend
-      const response = await fetch("http://localhost:3333/api/auth/primeiro-acesso", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://localhost:3333/api/auth/primeiro-acesso",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
         },
-        body: JSON.stringify({ email }),
-      });
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.erro || "Não foi possível solicitar o primeiro acesso.");
+        throw new Error(
+          data.erro || "Não foi possível solicitar o primeiro acesso.",
+        );
       }
 
       // Comportamento temporário solicitado: logar no console e dar alert
-      console.log("Senha gerada (ambiente de desenvolvimento):", data.senha_gerada);
+      console.log(
+        "Senha gerada (ambiente de desenvolvimento):",
+        data.senha_gerada,
+      );
       alert(`${data.mensagem}\n\nSenha Temporária: ${data.senha_gerada}`);
 
       setSuccess("Credenciais geradas com sucesso! Você já pode fazer login.");
       setEmail(""); // Limpa o input após o sucesso
-
     } catch (err: any) {
       setError(err.message || "Erro de conexão com o servidor.");
     } finally {
@@ -64,8 +71,10 @@ export default function FirstAccess() {
           Seu usuário e senha serão enviados para o seu endereço de e-mail.
         </p>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col items-center">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md flex flex-col items-center"
+        >
           {/* Feedback de Erro */}
           {error && (
             <div className="w-full mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-center text-sm font-medium border border-red-200">
@@ -89,7 +98,7 @@ export default function FirstAccess() {
             onChange={(e: any) => setEmail(e.target.value)}
           />
 
-          <button 
+          <button
             type="submit"
             disabled={isLoading}
             className="w-full my-4 bg-[#322A6A] text-white text-lg py-2 rounded-lg font-bold hover:bg-[#251c61] transition-colors cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
@@ -102,7 +111,7 @@ export default function FirstAccess() {
           Voltar para o Login
         </Link>
       </div>
-      
+
       {/* Hidden on screens smaller than 1024px */}
       <div className="hidden lg:flex lg:w-1/2 items-baseline justify-center">
         <img src="/vetor.png" alt="" className="w-164" />

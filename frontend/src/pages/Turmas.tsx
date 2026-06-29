@@ -1,13 +1,5 @@
-import PagesLayout from "../layouts/PagesLayout";
+import ConsultaAdmin from "./ConsultaAdmin";
 
 export default function Turmas() {
-  return (
-      <PagesLayout
-          pageTitle="Turmas"
-          pageDescription="Visualize e gerencie as turmas cadastradas no sistema."
-          userType="admin"
-      >
-          <div>Lista de Turmas</div>
-      </PagesLayout>
-  )
+  return <ConsultaAdmin tipo="turmas" />;
 }

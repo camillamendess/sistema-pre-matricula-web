@@ -10,16 +10,23 @@ interface StudentLayoutProps {
   userType?: "aluno" | "admin";
 }
 
-export default function PagesLayout({ children, pageTitle, pageDescription, userType }: StudentLayoutProps) {
+export default function PagesLayout({
+  children,
+  pageTitle,
+  pageDescription,
+  userType,
+}: StudentLayoutProps) {
   const { logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = () => {
-    const wantToLogout = window.confirm("Tem certeza que deseja encerrar a sessão?");
+    const wantToLogout = window.confirm(
+      "Tem certeza que deseja encerrar a sessão?",
+    );
     if (wantToLogout) {
       logout();
-    }  
-  }
+    }
+  };
 
   return (
     <div className="flex h-screen w-full bg-white overflow-hidden relative">
@@ -40,7 +47,7 @@ export default function PagesLayout({ children, pageTitle, pageDescription, user
         <Sidebar role={userType || "aluno"} />
       </div>
 
-      <main className="flex-1 flex flex-col p-6 lg:p-12 overflow-y-auto w-full h-full relative">
+      <main className="flex-1 flex flex-col p-6 lg:py-12 lg:pl-24 overflow-y-auto w-full h-full relative">
         {/* Mobile Header: Hamburger menu, Headline, and Logout button */}
         <div className="flex justify-between items-start mb-6 lg:mb-10 w-full">
           <div className="flex items-center gap-3">
@@ -49,8 +56,18 @@ export default function PagesLayout({ children, pageTitle, pageDescription, user
               onClick={() => setIsSidebarOpen(true)}
               className="lg:hidden text-[#322A6A] p-1 -ml-1 cursor-pointer"
             >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
               </svg>
             </button>
             <header>
@@ -65,9 +82,16 @@ export default function PagesLayout({ children, pageTitle, pageDescription, user
             </header>
           </div>
 
-          <button onClick={() => handleLogout()} className="flex items-center gap-2 text-[#322A6A] hover:text-[#272057] transition-colors cursor-pointer font-medium text-sm lg:absolute lg:top-12 lg:right-12">
+          <button
+            onClick={() => handleLogout()}
+            className="flex items-center gap-2 text-[#322A6A] hover:text-[#272057] transition-colors cursor-pointer font-medium text-sm lg:absolute lg:top-12 lg:right-12"
+          >
             <span className="hidden lg:inline">Encerrar Sessão</span>
-            <img src={logOutIcon} alt="Logout" className="w-6 h-6 lg:w-5 lg:h-5" />
+            <img
+              src={logOutIcon}
+              alt="Logout"
+              className="w-6 h-6 lg:w-5 lg:h-5"
+            />
           </button>
         </div>
 
