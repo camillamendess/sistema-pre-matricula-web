@@ -18,7 +18,22 @@ class TurmaController {
 
     static async listar(req, res) {
         try {
-            const turmas = await TurmaService.listarTurmas();
+            const {
+                codigo_turma,
+                periodo_letivo,
+                id_disciplina,
+                nome_disciplina,
+                codigo_disciplina
+            } = req.query;
+            const idDisciplinaNumero = id_disciplina ? parseInt(id_disciplina) : undefined;
+            const filtros = {
+                codigo_turma,
+                periodo_letivo,
+                id_disciplina: Number.isNaN(idDisciplinaNumero) ? undefined : idDisciplinaNumero,
+                nome_disciplina,
+                codigo_disciplina
+            };
+            const turmas = await TurmaService.listarTurmas(filtros);
             return res.status(200).json(turmas);
         } catch (error) {
             return res.status(500).json({ erro: error.message });

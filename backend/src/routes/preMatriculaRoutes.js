@@ -1,11 +1,12 @@
 const express = require('express');
 const PreMatriculaController = require('../controllers/PreMatriculaController');
+const { autenticarToken, autorizarAdmin, autorizarAluno } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.get('/relatorio', PreMatriculaController.relatorio);
-router.post('/', PreMatriculaController.cadastrar);
-router.get('/', PreMatriculaController.listar);
-router.delete('/:id', PreMatriculaController.excluir);
+router.get('/relatorio', autenticarToken, autorizarAdmin, PreMatriculaController.relatorio);
+router.post('/', autenticarToken, autorizarAluno, PreMatriculaController.cadastrar);
+router.get('/', autenticarToken, autorizarAdmin, PreMatriculaController.listar);
+router.delete('/:id', autenticarToken, autorizarAdmin, PreMatriculaController.excluir);
 
 module.exports = router;

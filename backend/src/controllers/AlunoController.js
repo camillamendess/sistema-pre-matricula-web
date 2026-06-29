@@ -13,7 +13,8 @@ class AlunoController {
 
     static async listar(req, res) {
         try {
-            const alunos = await AlunoService.listarAlunos();
+            const { nome, email, matricula } = req.query;
+            const alunos = await AlunoService.listarAlunos({ nome, email, matricula });
             return res.status(200).json(alunos);
         } catch (error) {
             return res.status(500).json({ erro: error.message });
@@ -24,6 +25,15 @@ class AlunoController {
         try {
             const { id } = req.params;
             const aluno = await AlunoService.buscarAluno(parseInt(id));
+            return res.status(200).json(aluno);
+        } catch (error) {
+            return res.status(404).json({ erro: error.message });
+        }
+    }
+
+    static async buscarMeuPerfil(req, res) {
+        try {
+            const aluno = await AlunoService.buscarAlunoPorUsuario(req.usuario.id_usuario);
             return res.status(200).json(aluno);
         } catch (error) {
             return res.status(404).json({ erro: error.message });

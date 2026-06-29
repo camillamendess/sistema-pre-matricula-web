@@ -13,8 +13,8 @@ class UsuarioService {
         return await UsuarioModel.criarAdmin(nome, email, senhaHash);
     }
 
-    static async listarUsuarios() {
-        return await UsuarioModel.listarTodos();
+    static async listarUsuarios(filtros = {}) {
+        return await UsuarioModel.listarTodos(filtros);
     }
 
     static async buscarUsuario(id_usuario) {

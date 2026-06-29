@@ -10,7 +10,6 @@ import { TurmaModel } from "../models/TurmaModel";
 export default function RealizarMatriculas() {
   const { user } = useAuth();
   const [turmas, setTurmas] = useState<TurmaModel[]>([]);
-  const [idAluno, setIdAluno] = useState<number | null>(null);
   const [openAccordion, setOpenAccordion] = useState<number | null>(null);
   
   // Estados de carregamento e feedback
@@ -27,11 +26,7 @@ export default function RealizarMatriculas() {
 
         // Identifica o id_aluno correspondente ao usuário logado
         if (user?.id_usuario) {
-          const alunos = await AlunoController.listar();
-          const alunoAtual = alunos.find(a => a.id_usuario === user.id_usuario);
-          if (alunoAtual) {
-            setIdAluno(alunoAtual.id_aluno);
-          }
+          await AlunoController.buscarMe();
         }
       } catch (error) {
         setFeedback({ 
@@ -51,19 +46,11 @@ export default function RealizarMatriculas() {
   };
 
   const handleMatricular = async (idTurma: number) => {
-    if (!idAluno) {
-      setFeedback({ 
-        message: "Erro de identificação: O seu perfil de aluno não foi encontrado.", 
-        type: "error" 
-      });
-      return;
-    }
-
     setEnrollingId(idTurma);
     setFeedback({ message: "", type: "" });
 
     try {
-      await PreMatriculaController.cadastrar(idAluno, idTurma);
+      await PreMatriculaController.cadastrar(idTurma);
       
       setFeedback({ 
         message: "Pré-matrícula realizada com sucesso!", 

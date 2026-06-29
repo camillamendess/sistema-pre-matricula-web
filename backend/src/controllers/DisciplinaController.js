@@ -18,7 +18,15 @@ class DisciplinaController {
 
     static async listar(req, res) {
         try {
-            const disciplinas = await DisciplinaService.listarDisciplinas();
+            const { codigo, nome, departamento, creditos } = req.query;
+            const creditosNumero = creditos !== undefined ? parseInt(creditos) : undefined;
+            const filtros = {
+                codigo,
+                nome,
+                departamento,
+                creditos: Number.isNaN(creditosNumero) ? undefined : creditosNumero
+            };
+            const disciplinas = await DisciplinaService.listarDisciplinas(filtros);
             return res.status(200).json(disciplinas);
         } catch (error) {
             return res.status(500).json({ erro: error.message });

@@ -34,3 +34,12 @@ CREATE TABLE IF NOT EXISTS Pre_Matricula (
     data_solicitacao DATE DEFAULT CURRENT_DATE,
     UNIQUE(id_aluno, id_turma)
 );
+
+INSERT INTO Usuario (nome, email, senha, tipo_usuario)
+VALUES (
+    'admin1',
+    'admin1@admin.com',
+    '$2b$10$W7F3mu4AEwfELtJfJAogZOTuPOA8fAGnc8/DZA1woZloRcvI0YBDq',
+    1
+)
+ON CONFLICT (email) DO NOTHING;

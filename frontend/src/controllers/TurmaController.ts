@@ -1,6 +1,26 @@
 import { request } from "../services/api";
 import { TurmaModel } from "../models/TurmaModel";
 
+interface TurmaFiltros {
+  codigo_turma?: string;
+  periodo_letivo?: string;
+  id_disciplina?: number;
+  nome_disciplina?: string;
+  codigo_disciplina?: string;
+}
+
+function buildQuery(params: object): string {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") {
+      searchParams.append(key, String(value));
+    }
+  });
+
+  const query = searchParams.toString();
+  return query ? `?${query}` : "";
+}
+
 export class TurmaController {
   static async cadastrar(dados: Partial<TurmaModel>): Promise<{ mensagem: string, turma: TurmaModel }> {
     return request("/turmas", {
@@ -9,8 +29,8 @@ export class TurmaController {
     });
   }
 
-  static async listar(): Promise<TurmaModel[]> {
-    return request<TurmaModel[]>("/turmas");
+  static async listar(filtros: TurmaFiltros = {}): Promise<TurmaModel[]> {
+    return request<TurmaModel[]>(`/turmas${buildQuery(filtros)}`);
   }
 
   static async buscar(id: number): Promise<TurmaModel> {

@@ -16,7 +16,14 @@ class UsuarioController {
 
     static async listar(req, res) {
         try {
-            const usuarios = await UsuarioService.listarUsuarios();
+            const { nome, email, tipo_usuario } = req.query;
+            const tipoUsuarioNumero = tipo_usuario ? parseInt(tipo_usuario) : undefined;
+            const filtros = {
+                nome,
+                email,
+                tipo_usuario: Number.isNaN(tipoUsuarioNumero) ? undefined : tipoUsuarioNumero
+            };
+            const usuarios = await UsuarioService.listarUsuarios(filtros);
             return res.status(200).json(usuarios);
         } catch (error) {
             return res.status(500).json({ erro: error.message });

@@ -2,10 +2,10 @@ import { request } from "../services/api";
 import { PreMatriculaModel, RelatorioMatriculaModel } from "../models/PreMatriculaModel";
 
 export class PreMatriculaController {
-  static async cadastrar(id_aluno: number, id_turma: number): Promise<{ mensagem: string, matricula: PreMatriculaModel }> {
+  static async cadastrar(id_turma: number): Promise<{ mensagem: string, matricula: PreMatriculaModel }> {
     return request("/pre-matriculas", {
       method: "POST",
-      body: JSON.stringify({ id_aluno, id_turma }),
+      body: JSON.stringify({ id_turma }),
     });
   }
 

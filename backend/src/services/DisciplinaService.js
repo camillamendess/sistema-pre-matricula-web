@@ -10,8 +10,8 @@ class DisciplinaService {
         return await DisciplinaModel.criar(codigo, nome, creditos, departamento);
     }
 
-    static async listarDisciplinas() {
-        return await DisciplinaModel.listarTodas();
+    static async listarDisciplinas(filtros = {}) {
+        return await DisciplinaModel.listarTodas(filtros);
     }
 
     static async buscarDisciplina(id_disciplina) {
