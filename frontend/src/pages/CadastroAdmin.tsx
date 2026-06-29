@@ -4,6 +4,7 @@ import { AlunoController } from "../controllers/AlunoController";
 import { DisciplinaController } from "../controllers/DisciplinaController";
 import { TurmaController } from "../controllers/TurmaController";
 import InputField from "../components/input-field";
+import PopupNotificacao from "../components/popup-notificacao";
 
 interface CadastroAdminProps {
   tipo: "aluno" | "disciplina" | "turma";
@@ -12,6 +13,12 @@ interface CadastroAdminProps {
 export default function CadastroAdmin({ tipo }: CadastroAdminProps) {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  const [popup, setPopup] = useState({
+    isOpen: false,
+    tipo: "sucesso" as "sucesso" | "erro",
+    mensagem: "",
+  });
 
   const handleChange = (chave: string, valor: string) => {
     setFormData((prev) => ({ ...prev, [chave]: valor }));
@@ -43,12 +50,19 @@ export default function CadastroAdmin({ tipo }: CadastroAdminProps) {
         });
       }
 
-      alert(`${tipo.toUpperCase()} cadastrado(a) com sucesso!`);
+      setPopup({
+        isOpen: true,
+        tipo: "sucesso",
+        mensagem: `${tipo} cadastrado(a) com sucesso!`,
+      });
       setFormData({}); // Reseta o formulário limpando os inputs
     } catch (error) {
-      alert(
-        "Erro ao realizar o cadastro. Verifique os dados e tente novamente.",
-      );
+      setPopup({
+        isOpen: true,
+        tipo: "erro",
+        mensagem:
+          "Erro ao realizar o cadastro. Verifique os dados e tente novamente.",
+      });
     } finally {
       setLoading(false);
     }
@@ -206,6 +220,13 @@ export default function CadastroAdmin({ tipo }: CadastroAdminProps) {
           </form>
         </div>
       </div>
+
+      <PopupNotificacao
+        isOpen={popup.isOpen}
+        tipo={popup.tipo}
+        mensagem={popup.mensagem}
+        onClose={() => setPopup((prev) => ({ ...prev, isOpen: false }))}
+      />
     </PagesLayout>
   );
 }
