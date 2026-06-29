@@ -145,9 +145,9 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
       pageDescription={configuracao.descricao}
       userType={userType}
     >
-      <div className="flex flex-col flex-1 w-full pt-4 pr-6">
+      <div className="flex flex-col flex-1 w-full pt-2 pr-6">
         {/* ================= BARRA DE PESQUISA ================= */}
-        <div className="relative w-full mb-8">
+        <div className="relative w-full mb-6">
           <input
             type="text"
             value={searchTerm}
@@ -163,7 +163,7 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
         {/* ================= CONTEÚDO PRINCIPAL ================= */}
         <div className="w-full flex flex-col items-center justify-center">
           {loading ? (
-            <div className="text-[#322A6A] font-bold text-lg animate-pulse mt-12">
+            <div className="text-[#322A6A] font-bold text-lg animate-pulse mt-10">
               Carregando dados...
             </div>
           ) : resultados.length === 0 ? (
@@ -171,12 +171,14 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
               Nenhum registro encontrado na base de dados.
             </p>
           ) : (
-            <div className="w-full bg-[#F8F9FA] rounded-3xl border border-gray-100 shadow-xl p-8 flex flex-col">
-              <h3 className="text-[#322A6A] font-bold text-center text-base mb-6">
-                Listagem de {tipo} ({resultados.length})
-              </h3>
+            <div className="w-full h-100 bg-[#F8F9FA] rounded-3xl border border-gray-100 shadow-xl p-6 flex flex-col">
+              <div className="flex-none">
+                <h3 className="text-[#322A6A] font-bold text-center text-base mb-5">
+                  Listagem de {tipo} ({resultados.length})
+                </h3>
+              </div>
 
-              <div className="max-h-80 overflow-y-auto pr-2 flex flex-col gap-1 dynamic-scrollbar">
+              <div className="flex-1 h-full overflow-y-auto pr-2 flex flex-col gap-1 dynamic-scrollbar">
                 {resultados.map((item: any, index) => (
                   <div
                     key={index}
@@ -211,14 +213,17 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
                   </div>
                 ))}
               </div>
-
-              <div className="flex flex-col items-center mt-4 text-[#322A6A]/60 gap-1">
-                <ChevronUp size={16} className="cursor-pointer" />
-                <ChevronDown size={16} className="cursor-pointer" />
-              </div>
             </div>
           )}
         </div>
+
+        <ModalExclusao
+          isOpen={isModalOpen}
+          tipo={tipo}
+          item={itemParaExcluir}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleConfirmarExclusao}
+        />
       </div>
     </PagesLayout>
   );
