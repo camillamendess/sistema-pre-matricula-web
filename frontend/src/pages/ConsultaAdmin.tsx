@@ -10,6 +10,7 @@ import { AlunoModel } from "../models/AlunoModel";
 import { DisciplinaModel } from "../models/DisciplinaModel";
 import { TurmaModel } from "../models/TurmaModel";
 import ModalExclusao from "../components/modal-exclusao/modal-exclusao";
+import ModalEdicao from "../components/modal-edicao/modal-edicao";
 
 interface ConsultaAdminProps {
   tipo: "alunos" | "disciplinas" | "turmas";
@@ -22,6 +23,9 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemParaExcluir, setItemParaExcluir] = useState<any | null>(null);
+
+  const [isModalEdicaoOpen, setIsModalEdicaoOpen] = useState(false);
+  const [itemParaEditar, setItemParaEditar] = useState<any | null>(null);
 
   const [alunos, setAlunos] = useState<AlunoModel[]>([]);
   const [disciplinas, setDisciplinas] = useState<DisciplinaModel[]>([]);
@@ -97,6 +101,11 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
   const handleAbrirModalExclusao = (item: any) => {
     setItemParaExcluir(item);
     setIsModalOpen(true);
+  };
+
+  const handleAbrirModalEdicao = (item: any) => {
+    setItemParaEditar(item);
+    setIsModalEdicaoOpen(true);
   };
 
   const handleConfirmarExclusao = async () => {
@@ -199,7 +208,10 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
                         >
                           <Trash2 size={18} />
                         </button>
-                        <button className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]">
+                        <button
+                          onClick={() => handleAbrirModalEdicao(item)}
+                          className="p-1 cursor-pointer transition-transform hover:scale-110 text-[#322A6A] hover:text-[#251c61]"
+                        >
                           <Pencil size={18} />
                         </button>
                       </div>
@@ -223,6 +235,14 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
           item={itemParaExcluir}
           onClose={() => setIsModalOpen(false)}
           onConfirm={handleConfirmarExclusao}
+        />
+
+        <ModalEdicao
+          isOpen={isModalEdicaoOpen}
+          tipo={tipo}
+          item={itemParaEditar}
+          onClose={() => setIsModalEdicaoOpen(false)}
+          onRefresh={carregarDados} // Recarrega a tabela após editar
         />
       </div>
     </PagesLayout>
