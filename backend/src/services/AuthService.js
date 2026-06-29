@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const UsuarioModel = require('../models/UsuarioModel');
+const AlunoModel = require('../models/AlunoModel'); // Importado para pegar o id_aluno
+const pool = require('../config/database'); // Importado para rodar a query das matrículas
 
 class AuthService {
     static async login(email, senha) {
@@ -23,12 +25,30 @@ class AuthService {
             { expiresIn: '8h' }
         );
 
+        let dadosExtras = {};
+        let matriculasDoAluno = [];
+
+        // Se o usuário for um aluno (tipo_usuario = 2), buscamos os dados dele e suas matrículas ativas
+        if (usuario.tipo_usuario === 2) {
+            const aluno = await AlunoModel.buscarPorUsuarioId(usuario.id_usuario);
+            
+            // Adicionamos as informações exclusivas da tabela Aluno
+            dadosExtras = {
+                id_aluno: aluno.id_aluno,
+                matricula: aluno.matricula
+            };
+
+            matriculasDoAluno = await AlunoModel.buscarMatriculas(aluno.id_aluno);
+        }
+
         return {
             token,
             usuario: {
                 id_usuario: usuario.id_usuario,
                 nome: usuario.nome,
-                tipo_usuario: usuario.tipo_usuario
+                tipo_usuario: usuario.tipo_usuario,
+                ...dadosExtras, // Espalha id_aluno e matricula (se for aluno)
+                matriculas: matriculasDoAluno // Array com as disciplinas ou vazio
             }
         };
     }
@@ -39,6 +59,7 @@ class AuthService {
         if (!usuario) {
             throw new Error('E-mail não encontrado na base de dados da instituição.');
         }
+        
         // Gera uma nova senha curta legível para o aluno usar (ex: 6 caracteres)
         const senhaGerada = crypto.randomBytes(3).toString('hex'); // Ex: 'f2d5b1'
 
