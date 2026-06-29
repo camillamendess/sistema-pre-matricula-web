@@ -45,7 +45,7 @@ class AuthService {
                 id_usuario: usuario.id_usuario,
                 nome: usuario.nome,
                 email: usuario.email,
-                tipo_usuario: usuario.tipo_usuario,
+                tipo_usuario: usuario.tipo_usuario || email,
                 ...dadosExtras, // Espalha id_aluno e matricula (se for aluno)
                 matriculas: matriculasDoAluno // Array com as disciplinas ou vazio
             }
