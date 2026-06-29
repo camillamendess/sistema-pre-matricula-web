@@ -48,12 +48,18 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
   };
 
   useEffect(() => {
+    setSearchTerm(""); // Reseta a busca ao mudar de aba
     carregarDados();
   }, [tipo]);
 
-  // Filtro dinâmico baseado no input digitado e na model do backend
   const dadosFiltrados = () => {
     const termo = searchTerm.toLowerCase().trim();
+
+    if (!termo) {
+      if (tipo === "alunos") return alunos;
+      if (tipo === "disciplinas") return disciplinas;
+      if (tipo === "turmas") return turmas;
+    }
 
     if (tipo === "alunos") {
       return alunos.filter(
@@ -117,22 +123,16 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
       titulo: "Consultar Alunos",
       descricao: "Busque por um ou mais alunos.",
       placeholder: "Digite o nome do(a) aluno(a), email ou número de matrícula",
-      emptyMessage:
-        "Sem resultados, busque pelo aluno na barra de pesquisa acima.",
     },
     disciplinas: {
       titulo: "Consultar Disciplinas",
       descricao: "Busque por uma ou mais disciplinas cadastradas.",
       placeholder: "Digite o nome, código ou departamento da disciplina",
-      emptyMessage:
-        "Sem resultados, busque pela disciplina na barra de pesquisa acima.",
     },
     turmas: {
       titulo: "Consultar Turmas",
       descricao: "Busque pelas turmas ofertadas no período letivo.",
       placeholder: "Digite o código da turma, período ou nome da disciplina",
-      emptyMessage:
-        "Sem resultados, busque pela turma na barra de pesquisa acima.",
     },
   }[tipo];
 
@@ -145,9 +145,9 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
       pageDescription={configuracao.descricao}
       userType={userType}
     >
-      <div className="flex flex-col flex-1 w-full max-w-4xl mx-auto pt-4 pb-6">
+      <div className="flex flex-col flex-1 w-full pt-4 pr-6">
         {/* ================= BARRA DE PESQUISA ================= */}
-        <div className="relative w-full mb-12">
+        <div className="relative w-full mb-8">
           <input
             type="text"
             value={searchTerm}
@@ -160,59 +160,49 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
           </div>
         </div>
 
+        {/* ================= CONTEÚDO PRINCIPAL ================= */}
         <div className="w-full flex flex-col items-center justify-center">
           {loading ? (
-            <div className="text-[#322A6A] font-bold text-lg animate-pulse">
+            <div className="text-[#322A6A] font-bold text-lg animate-pulse mt-12">
               Carregando dados...
             </div>
-          ) : searchTerm.trim() === "" ? (
-            <p className="text-[#322A6A] font-medium max-w-md leading-relaxed opacity-80 text-center mt-12">
-              {configuracao.emptyMessage}
-            </p>
           ) : resultados.length === 0 ? (
             <p className="text-gray-400 font-medium text-center mt-12">
-              Nenhum resultado encontrado para a busca.
+              Nenhum registro encontrado na base de dados.
             </p>
           ) : (
             <div className="w-full bg-[#F8F9FA] rounded-3xl border border-gray-100 shadow-xl p-8 flex flex-col">
               <h3 className="text-[#322A6A] font-bold text-center text-base mb-6">
-                Resultado(s) encontrado(s)
+                Listagem de {tipo} ({resultados.length})
               </h3>
 
               <div className="max-h-80 overflow-y-auto pr-2 flex flex-col gap-1 dynamic-scrollbar">
                 {resultados.map((item: any, index) => (
                   <div
                     key={index}
-                    className={`flex items-center justify-between py-3.5 px-4 rounded-xl border-b border-gray-200/60 last:border-none transition-colors ${
-                      index === 1
-                        ? "bg-[#322A6A] text-white"
-                        : "text-[#322A6A] hover:bg-gray-100/50"
-                    }`}
+                    className="flex items-center justify-between py-3.5 px-4 rounded-xl border-b border-gray-200/60 last:border-none transition-colors text-[#322A6A] hover:bg-gray-100/50"
                   >
                     <span className="font-semibold text-sm md:text-base">
                       {tipo === "alunos" && item.nome}
                       {tipo === "disciplinas" && item.nome}
-                      {tipo === "turmas" && `Turma ${item.codigo_turma}`}
+                      {tipo === "turmas" &&
+                        `Turma ${item.codigo_turma} - ${item.nome_disciplina || "Sem Nome"}`}
                     </span>
 
                     <div className="flex items-center gap-5">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleAbrirModalExclusao(item)}
-                          className={`p-1 cursor-pointer transition-transform hover:scale-110 ${index === 1 ? "text-white" : "text-[#322A6A]"}`}
+                          className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]"
                         >
                           <Trash2 size={18} />
                         </button>
-                        <button
-                          className={`p-1 cursor-pointer transition-transform hover:scale-110 ${index === 1 ? "text-white" : "text-[#322A6A]"}`}
-                        >
+                        <button className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]">
                           <Pencil size={18} />
                         </button>
                       </div>
 
-                      <span
-                        className={`font-mono text-sm min-w-20 text-right ${index === 1 ? "text-white/90" : "text-gray-500"}`}
-                      >
+                      <span className="font-mono text-sm min-w-24 text-right text-[#322A6A]">
                         {tipo === "alunos" && item.matricula}
                         {tipo === "disciplinas" && item.codigo}
                         {tipo === "turmas" && item.periodo_letivo}
@@ -229,14 +219,6 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
             </div>
           )}
         </div>
-
-        <ModalExclusao
-          isOpen={isModalOpen}
-          tipo={tipo}
-          item={itemParaExcluir}
-          onClose={() => setIsModalOpen(false)}
-          onConfirm={handleConfirmarExclusao}
-        />
       </div>
     </PagesLayout>
   );
