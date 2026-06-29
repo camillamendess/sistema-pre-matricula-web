@@ -2,19 +2,19 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const UsuarioModel = require('../models/UsuarioModel');
+const AlunoModel = require('../models/AlunoModel');
 
 class AuthService {
     static async login(email, senha) {
         const usuario = await UsuarioModel.buscarPorEmail(email);
-        
+
         if (!usuario) {
-            throw new Error('Usuário não encontrado.');
+            throw new Error('Usuario nao encontrado.');
         }
 
-        // O bcrypt compara a senha digitada com o hash guardado no banco
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
         if (!senhaValida) {
-            throw new Error('Credenciais inválidas.');
+            throw new Error('Credenciais invalidas.');
         }
 
         const token = jwt.sign(
@@ -28,40 +28,83 @@ class AuthService {
             usuario: {
                 id_usuario: usuario.id_usuario,
                 nome: usuario.nome,
+                email: usuario.email,
                 tipo_usuario: usuario.tipo_usuario
             }
         };
     }
 
     static async primeiroAcesso(email) {
-        const usuario = await UsuarioModel.buscarPorEmail(email);
-        
-        if (!usuario) {
-            throw new Error('E-mail não encontrado na base de dados da instituição.');
+        const aluno = await AlunoModel.buscarPorEmail(email);
+
+        if (!aluno) {
+            throw new Error('E-mail nao encontrado no cadastro de alunos.');
         }
-        // Gera uma nova senha curta legível para o aluno usar (ex: 6 caracteres)
-        const senhaGerada = crypto.randomBytes(3).toString('hex'); // Ex: 'f2d5b1'
 
-        // Gera o hash desta nova senha para atualizar no banco
-        const salt = await bcrypt.genSalt(10);
-        const senhaHash = await bcrypt.hash(senhaGerada, salt);
+        let usuario = null;
 
-        // Substitui a senha antiga pela nova senha criptografada
-        await UsuarioModel.atualizarSenha(usuario.id_usuario, senhaHash);
-        
-        // Simulação do disparo do e-mail institucional
-        console.log(`
-            [EMAIL SIMULADO VIA NODE]
-            Para: ${email}
-            Assunto: Suas Credenciais de Acesso - Sistema de Pré-Matrícula
-            Mensagem: Olá ${usuario.nome}, o seu primeiro acesso foi registado.
-            A sua senha temporária gerada pelo sistema é: ${senhaGerada}
-            Faça login com suas credenciais.
-        `);
+        if (aluno.id_usuario) {
+            usuario = await UsuarioModel.buscarPorId(aluno.id_usuario);
+        }
+
+        if (!usuario) {
+            usuario = await UsuarioModel.buscarPorEmail(email);
+        }
+
+        if (!usuario) {
+            const senhaInicial = crypto.randomBytes(24).toString('hex');
+            const salt = await bcrypt.genSalt(10);
+            const senhaHash = await bcrypt.hash(senhaInicial, salt);
+            usuario = await UsuarioModel.criarAluno(aluno.nome, aluno.email, senhaHash);
+        }
+
+        if (usuario.tipo_usuario !== 2) {
+            throw new Error('Este e-mail nao pertence a um cadastro de aluno.');
+        }
+
+        if (!aluno.id_usuario) {
+            await AlunoModel.vincularUsuario(aluno.id_aluno, usuario.id_usuario);
+        }
+
+        const acesso = jwt.sign(
+            { id_usuario: usuario.id_usuario, finalidade: 'definir_senha' },
+            process.env.JWT_SECRET,
+            { expiresIn: '30m' }
+        );
 
         return {
-            mensagem: 'Credenciais geradas com sucesso e enviadas para o e-mail institucional.',
-            senha_gerada: senhaGerada
+            mensagem: 'Cadastro encontrado. Defina sua senha para concluir o primeiro acesso.',
+            acesso
+        };
+    }
+
+    static async definirSenha(acesso, senha) {
+        if (!acesso) {
+            throw new Error('Acesso temporario nao informado.');
+        }
+
+        if (!senha || senha.length < 8) {
+            throw new Error('A senha deve ter no minimo 8 caracteres.');
+        }
+
+        let payload;
+        try {
+            payload = jwt.verify(acesso, process.env.JWT_SECRET);
+        } catch (error) {
+            throw new Error('Acesso expirado ou invalido. Solicite o primeiro acesso novamente.');
+        }
+
+        if (payload.finalidade !== 'definir_senha') {
+            throw new Error('Acesso temporario invalido.');
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const senhaHash = await bcrypt.hash(senha, salt);
+
+        await UsuarioModel.atualizarSenha(payload.id_usuario, senhaHash);
+
+        return {
+            mensagem: 'Senha definida com sucesso. Voce ja pode fazer login.'
         };
     }
 }

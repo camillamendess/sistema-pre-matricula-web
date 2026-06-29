@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom"; // 1. Importe o useLocation
+import { useNavigate, useLocation } from "react-router-dom";
 import LogoUesb from "../../assets/uesb-logo-2.png";
 
 interface SidebarProps {
@@ -10,19 +10,20 @@ export default function Sidebar({ role }: SidebarProps) {
   const location = useLocation();
 
   const alunoItems = [
-    { label: "Início", linkTo: "/home" },
-    { label: "Realizar Pré Matrícula", linkTo: "/matricular" },
-    { label: "Visualizar Pré Matrícula", linkTo: "/matriculas" },
-    { label: "Disciplinas disponíveis", linkTo: "/disciplinas" },
+    { label: "Inicio", linkTo: "/home" },
+    { label: "Realizar Pre Matricula", linkTo: "/matricular" },
+    { label: "Minhas Turmas", linkTo: "/matriculas" },
+    { label: "Comprovante de Matricula", linkTo: "/comprovante-matricula" },
+    { label: "Disciplinas disponiveis", linkTo: "/disciplinas" },
     { label: "Dados Cadastrais", linkTo: "/perfil" },
   ];
 
   const adminItems = [
-    { label: "Início", linkTo: "/admin" },
+    { label: "Inicio", linkTo: "/admin" },
     { label: "Alunos", linkTo: "/alunos" },
     { label: "Disciplinas", linkTo: "/disciplinas" },
     { label: "Turmas", linkTo: "/turmas" },
-    { label: "Relatórios", linkTo: "/relatorios" },
+    { label: "Relatorios", linkTo: "/relatorios" },
   ];
 
   const menuItems = role === "admin" ? adminItems : alunoItems;
@@ -35,8 +36,8 @@ export default function Sidebar({ role }: SidebarProps) {
     <div className="w-72.25 bg-[#322A6A] h-screen flex flex-col text-white select-none">
       <div className="flex flex-col items-center py-10 px-6 text-center">
         <img src={LogoUesb} alt="Logo UESB" className="w-24 mb-4" />
-        <h1 className="text-xl font-bold">Pré Matrícula</h1>
-        <span className="text-xs opacity-80">Sistema Acadêmico</span>
+        <h1 className="text-xl font-bold">Pre Matricula</h1>
+        <span className="text-xs opacity-80">Sistema Academico</span>
       </div>
 
       <nav className="flex-1 mt-6 flex flex-col">

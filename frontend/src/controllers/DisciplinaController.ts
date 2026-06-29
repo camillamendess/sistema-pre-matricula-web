@@ -8,6 +8,17 @@ interface DisciplinaFiltros {
   creditos?: number;
 }
 
+export interface AlunoDisciplina {
+  id_aluno: number;
+  nome: string;
+  email: string;
+  matricula: string;
+  data_solicitacao?: string;
+  id_turma: number;
+  codigo_turma: string;
+  periodo_letivo: string;
+}
+
 function buildQuery(params: object): string {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -34,6 +45,10 @@ export class DisciplinaController {
 
   static async buscar(id: number): Promise<DisciplinaModel> {
     return request<DisciplinaModel>(`/disciplinas/${id}`);
+  }
+
+  static async listarAlunos(id: number): Promise<AlunoDisciplina[]> {
+    return request<AlunoDisciplina[]>(`/disciplinas/${id}/alunos`);
   }
 
   static async atualizar(id: number, dados: Partial<DisciplinaModel>): Promise<{ mensagem: string, disciplina: DisciplinaModel }> {

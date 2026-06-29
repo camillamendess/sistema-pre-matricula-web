@@ -37,6 +37,17 @@ class AuthController {
             return res.status(400).json({ erro: error.message });
         }
     }
+
+    static async definirSenha(req, res) {
+        try {
+            const { acesso, senha } = req.body;
+            const resultado = await AuthService.definirSenha(acesso, senha);
+
+            return res.status(200).json(resultado);
+        } catch (error) {
+            return res.status(400).json({ erro: error.message });
+        }
+    }
 }
 
 module.exports = AuthController;

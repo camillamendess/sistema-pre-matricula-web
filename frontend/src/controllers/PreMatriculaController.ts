@@ -9,8 +9,23 @@ export class PreMatriculaController {
     });
   }
 
+  static async cadastrarParaAluno(id_aluno: number, id_turma: number): Promise<{ mensagem: string, matricula: PreMatriculaModel }> {
+    return request("/pre-matriculas/admin", {
+      method: "POST",
+      body: JSON.stringify({ id_aluno, id_turma }),
+    });
+  }
+
   static async listar(): Promise<PreMatriculaModel[]> {
     return request<PreMatriculaModel[]>("/pre-matriculas");
+  }
+
+  static async listarMinhas(): Promise<PreMatriculaModel[]> {
+    return request<PreMatriculaModel[]>("/pre-matriculas/minhas");
+  }
+
+  static async listarPorAluno(id_aluno: number): Promise<PreMatriculaModel[]> {
+    return request<PreMatriculaModel[]>(`/pre-matriculas/aluno/${id_aluno}`);
   }
 
   /**

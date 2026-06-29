@@ -3,16 +3,14 @@ const DisciplinaModel = require('../models/DisciplinaModel');
 
 class TurmaService {
     static async cadastrarTurma(id_disciplina, codigo_turma, periodo_letivo) {
-        // 1. Verifica se a disciplina informada existe
         const disciplina = await DisciplinaModel.buscarPorId(id_disciplina);
         if (!disciplina) {
-            throw new Error('A disciplina informada não existe no sistema.');
+            throw new Error('A disciplina informada nao existe no sistema.');
         }
 
-        // 2. Verifica se a turma já existe neste mesmo período letivo para esta disciplina
         const turmaExistente = await TurmaModel.buscarTurmaEspecifica(id_disciplina, codigo_turma, periodo_letivo);
         if (turmaExistente) {
-            throw new Error('Já existe uma turma com este código para esta disciplina neste período letivo.');
+            throw new Error('Ja existe uma turma com este codigo para esta disciplina neste periodo letivo.');
         }
 
         return await TurmaModel.criar(id_disciplina, codigo_turma, periodo_letivo);
@@ -25,23 +23,30 @@ class TurmaService {
     static async buscarTurma(id_turma) {
         const turma = await TurmaModel.buscarPorId(id_turma);
         if (!turma) {
-            throw new Error('Turma não encontrada.');
+            throw new Error('Turma nao encontrada.');
         }
         return turma;
     }
 
+    static async listarAlunosTurma(id_turma) {
+        const turma = await TurmaModel.buscarPorId(id_turma);
+        if (!turma) {
+            throw new Error('Turma nao encontrada.');
+        }
+
+        return await TurmaModel.listarAlunos(id_turma);
+    }
+
     static async atualizarTurma(id_turma, id_disciplina, codigo_turma, periodo_letivo) {
         const turmaAtual = await TurmaModel.buscarPorId(id_turma);
-        if (!turmaAtual) throw new Error('Turma não encontrada para atualização.');
+        if (!turmaAtual) throw new Error('Turma nao encontrada para atualizacao.');
 
-        // Verifica se a nova disciplina existe
         const disciplina = await DisciplinaModel.buscarPorId(id_disciplina);
-        if (!disciplina) throw new Error('A disciplina informada não existe.');
+        if (!disciplina) throw new Error('A disciplina informada nao existe.');
 
-        // Verifica regra de duplicação
         const turmaExistente = await TurmaModel.buscarTurmaEspecifica(id_disciplina, codigo_turma, periodo_letivo);
         if (turmaExistente && turmaExistente.id_turma !== id_turma) {
-            throw new Error('Já existe outra turma registrada com estas mesmas características.');
+            throw new Error('Ja existe outra turma registrada com estas mesmas caracteristicas.');
         }
 
         return await TurmaModel.atualizar(id_turma, id_disciplina, codigo_turma, periodo_letivo);
@@ -50,7 +55,7 @@ class TurmaService {
     static async excluirTurma(id_turma) {
         const deletado = await TurmaModel.excluir(id_turma);
         if (!deletado) {
-            throw new Error('Turma não encontrada para exclusão.');
+            throw new Error('Turma nao encontrada para exclusao.');
         }
     }
 }

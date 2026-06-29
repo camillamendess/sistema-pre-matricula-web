@@ -43,6 +43,16 @@ class DisciplinaController {
         }
     }
 
+    static async listarAlunos(req, res) {
+        try {
+            const { id } = req.params;
+            const alunos = await DisciplinaService.listarAlunosDisciplina(parseInt(id));
+            return res.status(200).json(alunos);
+        } catch (error) {
+            return res.status(404).json({ erro: error.message });
+        }
+    }
+
     static async atualizar(req, res) {
         try {
             const { id } = req.params;

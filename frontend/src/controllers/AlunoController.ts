@@ -19,16 +19,20 @@ function buildQuery(params: object): string {
   return query ? `?${query}` : "";
 }
 
+function normalizarEmail(email?: string): string | undefined {
+  return email ? email.trim().toLowerCase() : email;
+}
+
 export class AlunoController {
   static async cadastrar(dados: Partial<AlunoModel>): Promise<{ mensagem: string, aluno: AlunoModel }> {
     return request("/alunos", {
       method: "POST",
-      body: JSON.stringify(dados),
+      body: JSON.stringify({ ...dados, email: normalizarEmail(dados.email) }),
     });
   }
 
   static async listar(filtros: AlunoFiltros = {}): Promise<AlunoModel[]> {
-    return request<AlunoModel[]>(`/alunos${buildQuery(filtros)}`);
+    return request<AlunoModel[]>(`/alunos${buildQuery({ ...filtros, email: normalizarEmail(filtros.email) })}`);
   }
 
   static async buscarMe(): Promise<AlunoModel> {
@@ -42,7 +46,7 @@ export class AlunoController {
   static async atualizar(id: number, dados: Partial<AlunoModel>): Promise<{ mensagem: string, aluno: AlunoModel }> {
     return request(`/alunos/${id}`, {
       method: "PUT",
-      body: JSON.stringify(dados),
+      body: JSON.stringify({ ...dados, email: normalizarEmail(dados.email) }),
     });
   }
 

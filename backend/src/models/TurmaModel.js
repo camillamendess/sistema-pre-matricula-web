@@ -63,6 +63,25 @@ class TurmaModel {
         return rows[0];
     }
 
+    static async listarAlunos(id_turma) {
+        const query = `
+            SELECT
+                pm.id_pre_matricula,
+                pm.data_solicitacao,
+                a.id_aluno,
+                COALESCE(a.nome, u.nome) AS nome,
+                COALESCE(a.email, u.email) AS email,
+                a.matricula
+            FROM Pre_Matricula pm
+            JOIN Aluno a ON pm.id_aluno = a.id_aluno
+            LEFT JOIN Usuario u ON a.id_usuario = u.id_usuario
+            WHERE pm.id_turma = $1
+            ORDER BY nome ASC
+        `;
+        const { rows } = await pool.query(query, [id_turma]);
+        return rows;
+    }
+
     // Evitar duplicação de turmas iguais
     static async buscarTurmaEspecifica(id_disciplina, codigo_turma, periodo_letivo) {
         const query = `

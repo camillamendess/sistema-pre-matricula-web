@@ -35,6 +35,34 @@ class PreMatriculaModel {
         return rows;
     }
 
+    static async listarPorAluno(id_aluno) {
+        const query = `
+            SELECT
+                pm.id_pre_matricula,
+                pm.data_solicitacao,
+                a.id_aluno,
+                COALESCE(a.nome, u.nome) AS nome_aluno,
+                a.matricula,
+                t.id_turma,
+                t.codigo_turma,
+                t.periodo_letivo,
+                d.id_disciplina,
+                d.codigo AS codigo_disciplina,
+                d.nome AS nome_disciplina,
+                d.creditos,
+                d.departamento
+            FROM Pre_Matricula pm
+            JOIN Aluno a ON pm.id_aluno = a.id_aluno
+            LEFT JOIN Usuario u ON a.id_usuario = u.id_usuario
+            JOIN Turma t ON pm.id_turma = t.id_turma
+            JOIN Disciplina d ON t.id_disciplina = d.id_disciplina
+            WHERE pm.id_aluno = $1
+            ORDER BY d.nome ASC
+        `;
+        const { rows } = await pool.query(query, [id_aluno]);
+        return rows;
+    }
+
     static async excluir(id_pre_matricula) {
         const query = 'DELETE FROM Pre_Matricula WHERE id_pre_matricula = $1 RETURNING id_pre_matricula';
         const { rows } = await pool.query(query, [id_pre_matricula]);

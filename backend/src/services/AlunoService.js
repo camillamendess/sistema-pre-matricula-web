@@ -1,21 +1,19 @@
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const AlunoModel = require('../models/AlunoModel');
 const UsuarioModel = require('../models/UsuarioModel');
 
 class AlunoService {
     static async cadastrarAluno(nome, email, matricula) {
+        if (!nome || !email || !matricula) {
+            throw new Error('Nome, e-mail e matricula sao obrigatorios.');
+        }
+
         const usuarioExistente = await UsuarioModel.buscarPorEmail(email);
-        if (usuarioExistente) throw new Error('E-mail já está em uso.');
+        if (usuarioExistente) throw new Error('E-mail ja esta em uso.');
 
-        // Gerar senha inicial aleatória segura
-        const senhaInicialAleatoria = crypto.randomBytes(4).toString('hex'); // Ex: 'a7b3c2d1'
-        const salt = await bcrypt.genSalt(10);
-        const senhaHash = await bcrypt.hash(senhaInicialAleatoria, salt);
+        const alunoExistente = await AlunoModel.buscarPorEmail(email);
+        if (alunoExistente) throw new Error('E-mail ja esta em uso.');
 
-        // Envia o hash gerado para o Model salvar no banco
-        const novoAluno = await AlunoModel.criarAluno(nome, email, matricula, senhaHash);
-        return novoAluno;
+        return await AlunoModel.criarAluno(nome, email, matricula);
     }
 
     static async listarAlunos(filtros = {}) {
@@ -24,7 +22,7 @@ class AlunoService {
 
     static async buscarAluno(id_aluno) {
         const aluno = await AlunoModel.buscarPorId(id_aluno);
-        if (!aluno) throw new Error('Aluno não encontrado.');
+        if (!aluno) throw new Error('Aluno nao encontrado.');
         return aluno;
     }
 
@@ -36,18 +34,23 @@ class AlunoService {
 
     static async atualizarAluno(id_aluno, nome, email, matricula) {
         const alunoAtual = await AlunoModel.buscarPorId(id_aluno);
-        if (!alunoAtual) throw new Error('Aluno não encontrado.');
+        if (!alunoAtual) throw new Error('Aluno nao encontrado.');
 
         const usuarioExistente = await UsuarioModel.buscarPorEmail(email);
+        const alunoExistente = await AlunoModel.buscarPorEmail(email);
+
         if (usuarioExistente && usuarioExistente.id_usuario !== alunoAtual.id_usuario) {
-            throw new Error('E-mail já está em uso por outra conta.');
+            throw new Error('E-mail ja esta em uso por outra conta.');
+        }
+
+        if (alunoExistente && alunoExistente.id_aluno !== alunoAtual.id_aluno) {
+            throw new Error('E-mail ja esta em uso por outra conta.');
         }
 
         return await AlunoModel.atualizar(id_aluno, nome, email, matricula);
     }
 
     static async excluirAluno(id_aluno) {
-        // Se houver uma matrícula vinculada, o Model disparará o erro relacional do banco
         await AlunoModel.excluir(id_aluno);
     }
 }

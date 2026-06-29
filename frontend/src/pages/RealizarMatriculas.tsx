@@ -150,7 +150,7 @@ export default function RealizarMatriculas() {
         
         <br />
         <SmallCard
-            linkTo="/home-aluno" // Ajustado para apontar para a rota protegida correta do aluno
+            linkTo="/home"
             text="Voltar"
             icon="profile" // Necessário caso o SmallCard espere um ícone, ou remova se for opcional
             variant="blue"
