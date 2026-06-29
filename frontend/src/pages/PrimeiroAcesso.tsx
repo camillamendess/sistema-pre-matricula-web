@@ -23,9 +23,8 @@ export default function PrimeiroAcesso() {
     setIsLoading(true);
 
     try {
-      // Ajuste a URL e porta para a rota exata do seu backend
       const response = await fetch(
-        "http://localhost:3333/api/auth/primeiro-acesso",
+        "http://localhost:3000/api/auth/primeiro-acesso",
         {
           method: "POST",
           headers: {
