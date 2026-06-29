@@ -1,26 +1,22 @@
-import { useState, useRef, UIEvent } from "react";
+import { useState, UIEvent, useEffect } from "react";
 import PagesLayout from "../layouts/PagesLayout";
 import logoUesb from "../assets/uesb-logo-2.png"; // Adjust this path to your actual logo asset
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import RelatorioController from "../controllers/RelatorioController";
+import { RelatorioModel } from "../models/RelatorioModel";
 
-// Mock data for the report
-const MOCK_REPORT_DATA = [
-  {
-    id: 1,
-    name: "Arquitetura de Computadores",
-    department: "DCET",
-    enrolled: 45,
-  },
-  { id: 2, name: "Programação Concorrente", department: "DCET", enrolled: 38 },
-  { id: 3, name: "Lógica Digital", department: "DCET", enrolled: 52 },
-  { id: 4, name: "Cálculo I", department: "DCET", enrolled: 60 },
-  { id: 5, name: "Física Básica", department: "DCET", enrolled: 41 },
-];
+
 
 export default function Relatorios() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [disciplinas, setDisciplinas] = useState<RelatorioModel[]>([]);
+
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
 
   if (user?.tipo_usuario !== 1) {
     // Redirect non-admin users to the home page
@@ -30,6 +26,45 @@ export default function Relatorios() {
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSort, setSelectedSort] = useState("");
   const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+
+    async function carregarRelatorio() {
+
+        if (!selectedSemester || !selectedSort) {
+
+            setDisciplinas([]);
+
+            return;
+
+        }
+
+        try {
+
+            setLoading(true);
+
+            setError("");
+
+            const resposta =
+                await RelatorioController.gerarRelatorio(
+                    selectedSemester,
+                    selectedSort
+                );
+
+            setDisciplinas(resposta);
+
+        } catch {
+
+            setError("Erro ao gerar relatório.");
+
+        } finally {
+
+            setLoading(false);
+
+        }
+      }
+      carregarRelatorio();
+  }, [selectedSemester, selectedSort]);
 
   // Determine if the report should be generated (both options selected)
   const isReportGenerated = selectedSemester !== "" && selectedSort !== "";
@@ -46,18 +81,6 @@ export default function Relatorios() {
   // Trigger the browser's print dialog, which we will style via CSS to only print the A4 paper
   const handleDownloadPDF = () => {
     window.print();
-  };
-
-  // Sort data based on user selection
-  const getSortedData = () => {
-    const data = [...MOCK_REPORT_DATA];
-    if (selectedSort === "name") {
-      return data.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    if (selectedSort === "quantity") {
-      return data.sort((a, b) => b.enrolled - a.enrolled);
-    }
-    return data;
   };
 
   return (
@@ -129,6 +152,24 @@ export default function Relatorios() {
 
         {/* === SECTION 2: Report Preview === */}
         <div className="flex-1 flex flex-col min-h-0 ">
+          {loading && (
+
+              <p className="text-center">
+
+                  Carregando relatório...
+
+              </p>
+
+          )}
+          {error && (
+
+              <p className="text-center text-red-600">
+
+                  {error}
+
+              </p>
+
+          )}
           {!isReportGenerated ? (
             /* STATE 1: No Report */
             <div className="flex-1 border-2 border-dashed border-[#322A6A] rounded-xl flex items-center justify-center bg-[#f8f8f8] print:hidden">
@@ -202,19 +243,19 @@ export default function Relatorios() {
                       </tr>
                     </thead>
                     <tbody>
-                      {getSortedData().map((course, index) => (
-                        <tr key={course.id}>
+                      {disciplinas.map((course, index) => (
+                        <tr key={course.id_disciplina}>
                           <td className="border border-black p-3 text-center">
                             {index + 1}
                           </td>
                           <td className="border border-black p-3">
-                            {course.name}
+                            {course.nome}
                           </td>
                           <td className="border border-black p-3">
-                            {course.department}
+                            {course.departamento}
                           </td>
                           <td className="border border-black p-3 text-center">
-                            {course.enrolled}
+                            {course.total_alunos}
                           </td>
                         </tr>
                       ))}
