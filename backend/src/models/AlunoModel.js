@@ -160,6 +160,29 @@ class AlunoModel {
             client.release();
         }
     }
+
+    static async buscarMatriculas(id_aluno) {
+        const queryMatriculas = `
+            SELECT 
+                pm.id_pre_matricula, 
+                pm.data_solicitacao,
+                t.id_turma, 
+                t.codigo_turma, 
+                t.periodo_letivo,
+                d.codigo AS codigo_disciplina,
+                d.nome AS nome_disciplina, 
+                d.departamento
+            FROM Pre_Matricula pm
+            JOIN Turma t ON pm.id_turma = t.id_turma
+            JOIN Disciplina d ON t.id_disciplina = d.id_disciplina
+            WHERE pm.id_aluno = $1
+            ORDER BY pm.data_solicitacao DESC
+        `;
+        
+        const { rows } = await pool.query(queryMatriculas, [id_aluno]);
+        
+        return rows;
+    }
 }
 
 module.exports = AlunoModel;

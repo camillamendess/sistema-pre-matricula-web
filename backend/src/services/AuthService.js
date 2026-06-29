@@ -23,13 +23,31 @@ class AuthService {
             { expiresIn: '8h' }
         );
 
+        let dadosExtras = {};
+        let matriculasDoAluno = [];
+
+        // Se o usuário for um aluno (tipo_usuario = 2), buscamos os dados dele e suas matrículas ativas
+        if (usuario.tipo_usuario === 2) {
+            const aluno = await AlunoModel.buscarPorUsuarioId(usuario.id_usuario);
+            
+            // Adicionamos as informações exclusivas da tabela Aluno
+            dadosExtras = {
+                id_aluno: aluno.id_aluno,
+                matricula: aluno.matricula
+            };
+
+            matriculasDoAluno = await AlunoModel.buscarMatriculas(aluno.id_aluno);
+        }
+
         return {
             token,
             usuario: {
                 id_usuario: usuario.id_usuario,
                 nome: usuario.nome,
                 email: usuario.email,
-                tipo_usuario: usuario.tipo_usuario
+                tipo_usuario: usuario.tipo_usuario,
+                ...dadosExtras, // Espalha id_aluno e matricula (se for aluno)
+                matriculas: matriculasDoAluno // Array com as disciplinas ou vazio
             }
         };
     }
