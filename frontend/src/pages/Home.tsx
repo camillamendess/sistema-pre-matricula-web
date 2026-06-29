@@ -1,10 +1,6 @@
-import { useEffect, useState } from "react";
 import LargeCard from "../components/large-card";
 import SmallCard from "../components/small-card";
 import PagesLayout from "../layouts/PagesLayout";
-import { UsuarioController } from "../controllers/UsuarioController";
-import { UsuarioModel } from "../models/UsuarioModel";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Home() {
@@ -27,7 +23,7 @@ export default function Home() {
 
   // Fallback to "Aluno" if for some reason the name doesn't load
 
-  const isAdmin = true;
+  const isAdmin = user?.tipo_usuario === 1;
 
   const displayTitle = user
     ? `Olá, ${user.nome.split(" ")[0]}!`

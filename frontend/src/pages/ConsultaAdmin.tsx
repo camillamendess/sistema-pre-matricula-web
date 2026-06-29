@@ -211,7 +211,7 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
                     </span>
 
                     <div className="flex items-center gap-5">
-                      <div className="flex items-center gap-2">
+                      {user?.tipo_usuario === 1 && <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleAbrirModalExclusao(item)}
                           className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]"
@@ -224,7 +224,7 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
                         >
                           <Pencil size={18} />
                         </button>
-                      </div>
+                      </div>}
 
                       <span className="font-mono text-sm min-w-24 text-right text-[#322A6A]">
                         {tipo === "alunos" && item.matricula}
