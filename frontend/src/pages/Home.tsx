@@ -23,12 +23,12 @@ export default function Home() {
   const isAdmin = user?.tipo_usuario === 1;
 
   const displayTitle = user
-    ? `Ola, ${user.nome.split(" ")[0]}!`
+    ? `Olá, ${user.nome.split(" ")[0]}!`
     : "Painel";
 
   const displayDescription = isAdmin
     ? "Gerencie disciplinas, alunos e turmas."
-    : "Consulte suas disciplinas, turmas e comprovante de matricula.";
+    : "Consulte suas disciplinas, turmas e comprovante de matrícula.";
 
   return (
     <PagesLayout
@@ -70,7 +70,7 @@ export default function Home() {
           />
           <SmallCard
             linkTo="/relatorios"
-            text="Relatorios"
+            text="Relatórios"
             icon="graph-report"
             variant="white"
           />
@@ -91,7 +91,7 @@ export default function Home() {
           />
           <SmallCard
             linkTo="/comprovante-matricula"
-            text="Comprovante de Matricula"
+            text="Comprovante de Matrícula"
             icon="graph-report"
             variant="white"
           />

@@ -10,20 +10,20 @@ export default function Sidebar({ role }: SidebarProps) {
   const location = useLocation();
 
   const alunoItems = [
-    { label: "Inicio", linkTo: "/home" },
+    { label: "Início", linkTo: "/home" },
     { label: "Realizar Pré-Matrícula", linkTo: "/matricular" },
     { label: "Minhas Turmas", linkTo: "/matriculas" },
-    { label: "Comprovante de Matricula", linkTo: "/comprovante-matricula" },
-    { label: "Disciplinas disponiveis", linkTo: "/disciplinas" },
+    { label: "Comprovante de Matrícula", linkTo: "/comprovante-matricula" },
+    { label: "Disciplinas disponíveis", linkTo: "/disciplinas" },
     { label: "Dados Cadastrais", linkTo: "/perfil" },
   ];
 
   const adminItems = [
-    { label: "Inicio", linkTo: "/admin" },
+    { label: "Início", linkTo: "/admin" },
     { label: "Alunos", linkTo: "/alunos" },
     { label: "Disciplinas", linkTo: "/disciplinas" },
     { label: "Turmas", linkTo: "/turmas" },
-    { label: "Relatorios", linkTo: "/relatorios" },
+    { label: "Relatórios", linkTo: "/relatorios" },
   ];
 
   const menuItems = role === "admin" ? adminItems : alunoItems;
@@ -37,7 +37,7 @@ export default function Sidebar({ role }: SidebarProps) {
       <div className="flex flex-col items-center py-10 px-6 text-center">
         <img src={LogoUesb} alt="Logo UESB" className="w-24 mb-4" />
         <h1 className="text-xl font-bold">Pré-Matrícula</h1>
-        <span className="text-xs opacity-80">Sistema Academico</span>
+        <span className="text-xs opacity-80">Sistema Acadêmico</span>
       </div>
 
       <nav className="flex-1 mt-6 flex flex-col">

@@ -266,7 +266,7 @@ export default function Relatorios() {
                   <div className="flex-1"></div>
 
                   <div className="border-t border-black pt-4 mt-12 text-center text-xs text-black">
-                    Documento gerado pelo Sistema Acadêmico de Pre-Matricula -
+                    Documento gerado pelo Sistema Acadêmico de Pré-Matrícula -
                     UESB
                   </div>
                 </div>

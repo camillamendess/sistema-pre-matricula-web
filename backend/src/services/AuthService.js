@@ -122,7 +122,7 @@ class AuthService {
         await UsuarioModel.atualizarSenha(payload.id_usuario, senhaHash);
 
         return {
-            mensagem: 'Senha definida com sucesso. Voce ja pode fazer login.'
+            mensagem: 'Senha definida com sucesso. Você já pode fazer login.'
         };
     }
 }

@@ -32,7 +32,7 @@ export default function ComprovanteMatricula() {
 
   return (
     <PagesLayout
-      pageTitle="Comprovante de Matricula"
+      pageTitle="Comprovante de Matrícula"
       pageDescription="Confira e imprima seu comprovante de disciplinas matriculadas."
       userType="aluno"
     >
@@ -51,9 +51,9 @@ export default function ComprovanteMatricula() {
           <div className="w-full max-w-5xl bg-white border border-gray-200 rounded-2xl shadow-xl p-6 text-[#322A6A]">
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 border-b border-gray-200 pb-5 mb-5">
               <div>
-                <h3 className="text-xl font-bold">Comprovante de Matricula</h3>
+                <h3 className="text-xl font-bold">Comprovante de Matrícula</h3>
                 <p className="text-sm text-[#332a6ad0] mt-1">
-                  Sistema Academico de Pré-Matrícula
+                  Sistema Acadêmico de Pré-Matrícula
                 </p>
               </div>
               <button
@@ -72,7 +72,7 @@ export default function ComprovanteMatricula() {
                 <strong>E-mail:</strong> {user?.email}
               </p>
               <p>
-                <strong>Matricula:</strong> {matriculas[0]?.matricula || "-"}
+                <strong>Matrícula:</strong> {matriculas[0]?.matricula || "-"}
               </p>
               <p>
                 <strong>Total de creditos:</strong> {totalCreditos}

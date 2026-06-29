@@ -87,10 +87,10 @@ export default function AlunoDetalhe() {
 
     try {
       await PreMatriculaController.excluir(matricula.id_pre_matricula);
-      setFeedback("Matricula removida com sucesso.");
+      setFeedback("Matrícula removida com sucesso.");
       await carregarMatriculas(Number(id));
     } catch (err: any) {
-      setFeedback(err.message || "Nao foi possivel remover a matricula.");
+      setFeedback(err.message || "Nao foi possivel remover a matrícula.");
     }
   };
 
@@ -116,7 +116,7 @@ export default function AlunoDetalhe() {
                 <div>
                   <h3 className="text-2xl font-bold">{aluno.nome}</h3>
                   <p className="text-sm text-[#332a6ad0]">
-                    Numero de matricula: {aluno.matricula}
+                    Numero de matrícula: {aluno.matricula}
                   </p>
                 </div>
                 <button
@@ -156,8 +156,8 @@ export default function AlunoDetalhe() {
                   required
                 />
                 <InputField
-                  label="Numero de matricula*"
-                  placeholder="Matricula"
+                  label="Numero de matrícula*"
+                  placeholder="Matrícula"
                   icon="file"
                   value={formData.matricula || ""}
                   onChange={(e) => handleChange("matricula", e.target.value)}

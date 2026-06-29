@@ -42,9 +42,9 @@ export default function PrimeiroAcesso() {
         <h1 className="text-[#322A6A] text-3xl font-bold mb-1 text-center">
           Primeiro Acesso
         </h1>
-        <h2 className="text-lg mb-4 text-center">Sistema Academico</h2>
+        <h2 className="text-lg mb-4 text-center">Sistema Acadêmico</h2>
         <p className="text-base text-[#322A6A] mb-6 max-w-sm text-center">
-          Informe o e-mail cadastrado pela coordenacao para iniciar seu acesso.
+          Informe o e-mail cadastrado pela coordenação para iniciar seu acesso.
         </p>
 
         <form

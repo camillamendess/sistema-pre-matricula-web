@@ -59,9 +59,9 @@ export default function DefinirSenha() {
         <h1 className="text-[#322A6A] text-3xl font-bold mb-1 text-center">
           Definir Senha
         </h1>
-        <h2 className="text-lg mb-4 text-center">Sistema Academico</h2>
+        <h2 className="text-lg mb-4 text-center">Sistema Acadêmico</h2>
         <p className="text-base text-[#322A6A] mb-6 max-w-sm text-center">
-          Escolha a senha que sera usada nos proximos acessos.
+          Escolha a senha que será usada nos próximos acessos.
         </p>
 
         <form
@@ -89,7 +89,7 @@ export default function DefinirSenha() {
           <InputField
             label="Nova senha*"
             type="password"
-            placeholder="Minimo de 8 caracteres"
+            placeholder="Mínimo de 8 caracteres"
             icon="lock"
             value={senha}
             minLength={8}
@@ -115,8 +115,8 @@ export default function DefinirSenha() {
           </button>
         </form>
 
-        <Link to="/primeiro-acesso" className="text-sm text-[#322A6A] underline mt-2">
-          Solicitar primeiro acesso novamente
+        <Link to="/" className="text-sm text-[#322A6A] underline mt-2">
+          Voltar para Login
         </Link>
       </div>
 

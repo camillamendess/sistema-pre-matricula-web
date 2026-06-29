@@ -29,7 +29,7 @@ function autorizarTipos(...tiposPermitidos) {
         }
 
         if (!tiposPermitidos.includes(req.usuario.tipo_usuario)) {
-            return res.status(403).json({ erro: 'Voce nao tem permissao para acessar este recurso.' });
+            return res.status(403).json({ erro: 'Você não tem permissão para acessar este recurso.' });
         }
 
         return next();

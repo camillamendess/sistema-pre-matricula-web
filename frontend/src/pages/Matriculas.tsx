@@ -26,7 +26,7 @@ export default function Matriculas() {
   return (
     <PagesLayout
       pageTitle="Minhas Turmas"
-      pageDescription="Acompanhe as disciplinas em que voce esta matriculado."
+      pageDescription="Acompanhe as disciplinas em que você está matrículado."
       userType="aluno"
     >
       <div className="flex flex-col flex-1 w-full pt-2 pr-6">
@@ -42,7 +42,7 @@ export default function Matriculas() {
           </div>
         ) : matriculas.length === 0 ? (
           <div className="w-full max-w-3xl bg-[#F8F9FA] rounded-2xl border border-gray-100 shadow-md p-8 text-center text-[#322A6A] font-medium">
-            Voce ainda nao esta matriculado em nenhuma turma.
+            Você ainda não está matriculado em nenhuma turma.
           </div>
         ) : (
           <div className="w-full max-w-5xl bg-[#F8F9FA] rounded-2xl border border-gray-100 shadow-xl p-6 flex flex-col gap-3">

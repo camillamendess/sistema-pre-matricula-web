@@ -51,7 +51,7 @@ export default function TurmaDetalhe() {
 
   const handleMatricularAluno = async () => {
     if (!id || !idAlunoSelecionado) {
-      setFeedback("Selecione um aluno para realizar a matricula.");
+      setFeedback("Selecione um aluno para realizar a matrícula.");
       return;
     }
 
@@ -175,7 +175,7 @@ export default function TurmaDetalhe() {
                         setTermoBuscaAluno(e.target.value);
                         setIdAlunoSelecionado("");
                       }}
-                      placeholder="Digite nome ou matricula"
+                      placeholder="Digite nome ou matrícula"
                       className="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#322A6A]"
                     />
 
@@ -200,7 +200,7 @@ export default function TurmaDetalhe() {
                                 {aluno.nome}
                               </span>
                               <span className="block text-xs text-[#332a6ad0]">
-                                Matricula: {aluno.matricula} | {aluno.email}
+                                Matrícula: {aluno.matricula} | {aluno.email}
                               </span>
                             </button>
                           ))
@@ -237,7 +237,7 @@ export default function TurmaDetalhe() {
                       <tr className="bg-[#322A6A] text-white">
                         <th className="text-left p-3">Aluno</th>
                         <th className="text-left p-3">Email</th>
-                        <th className="text-left p-3">Numero de matricula</th>
+                        <th className="text-left p-3">Numero de matrícula</th>
                       </tr>
                     </thead>
                     <tbody>
