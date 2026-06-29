@@ -5,7 +5,7 @@ interface SidebarProps {
   role: "aluno" | "admin";
 }
 
-export default function Sidebar({ role }: SidebarProps): React.JSX.Element {
+export default function Sidebar({ role }: SidebarProps) {
   const navigate = useNavigate();
 
   const alunoItems = [
@@ -25,8 +25,8 @@ export default function Sidebar({ role }: SidebarProps): React.JSX.Element {
   const menuItems = role === "admin" ? adminItems : alunoItems;
 
   const handleClick = (linkTo: string) => {
-    navigate(linkTo)
-  }
+    navigate(linkTo);
+  };
 
   return (
     <div className="w-72.25 bg-[#322A6A] h-screen flex flex-col text-white select-none">

@@ -1,13 +1,59 @@
-import InputField from "../components/input-field";
+import { useState } from "react";
 import PagesLayout from "../layouts/PagesLayout";
+import { AlunoController } from "../controllers/AlunoController";
+import { DisciplinaController } from "../controllers/DisciplinaController";
+import { TurmaController } from "../controllers/TurmaController";
+import InputField from "../components/input-field";
 
 interface CadastroAdminProps {
   tipo: "aluno" | "disciplina" | "turma";
 }
 
-export default function CadastroAdmin({
-  tipo,
-}: CadastroAdminProps): React.JSX.Element {
+export default function CadastroAdmin({ tipo }: CadastroAdminProps) {
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (chave: string, valor: string) => {
+    setFormData((prev) => ({ ...prev, [chave]: valor }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (tipo === "aluno") {
+        await AlunoController.cadastrar({
+          nome: formData.nome,
+          email: formData.email,
+          matricula: formData.matricula,
+        });
+      } else if (tipo === "disciplina") {
+        await DisciplinaController.cadastrar({
+          codigo: formData.codigo,
+          nome: formData.nome,
+          creditos: Number(formData.creditos),
+          departamento: formData.departamento,
+        });
+      } else if (tipo === "turma") {
+        await TurmaController.cadastrar({
+          id_disciplina: Number(formData.id_disciplina),
+          codigo_turma: formData.codigo_turma,
+          periodo_letivo: formData.periodo_letivo,
+        });
+      }
+
+      alert(`${tipo.toUpperCase()} cadastrado(a) com sucesso!`);
+      setFormData({}); // Reseta o formulário limpando os inputs
+    } catch (error) {
+      alert(
+        "Erro ao realizar o cadastro. Verifique os dados e tente novamente.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const configuracao = {
     aluno: {
       titulo: "Cadastrar Aluno",
@@ -29,80 +75,6 @@ export default function CadastroAdmin({
     },
   }[tipo];
 
-  const renderCampos = () => {
-    switch (tipo) {
-      case "aluno":
-        return (
-          <>
-            <InputField
-              label="Nome*"
-              type="text"
-              placeholder="Informe o nome do aluno"
-              icon="user"
-            />
-            <InputField
-              label="CPF*"
-              type="text"
-              placeholder="Informe o CPF"
-              icon="file"
-            />
-            <InputField
-              label="Matrícula*"
-              type="text"
-              placeholder="Informe a matrícula"
-              icon="user"
-            />
-          </>
-        );
-      case "disciplina":
-        return (
-          <>
-            <InputField
-              label="Nome da Disciplina*"
-              type="text"
-              placeholder="Informe o nome da disciplina"
-              icon="file"
-            />
-            <InputField
-              label="Código*"
-              type="text"
-              placeholder="Informe o código da disciplina"
-              icon="file"
-            />
-            <InputField
-              label="Período Letivo*"
-              type="text"
-              placeholder="Informe o período letivo (ex: 2026.1)"
-              icon="file"
-            />
-          </>
-        );
-      case "turma":
-        return (
-          <>
-            <InputField
-              label="Disciplina*"
-              type="text"
-              placeholder="Informe o nome ou código da disciplina"
-              icon="file"
-            />
-            <InputField
-              label="Professor*"
-              type="text"
-              placeholder="Informe o nome do professor"
-              icon="user"
-            />
-            <InputField
-              label="Horário*"
-              type="text"
-              placeholder="Informe o horário (ex: Seg/Qua 14h)"
-              icon="file"
-            />
-          </>
-        );
-    }
-  };
-
   return (
     <PagesLayout
       pageTitle={configuracao.titulo}
@@ -115,14 +87,121 @@ export default function CadastroAdmin({
             {configuracao.subtitulo}
           </h3>
 
-          <form className="w-full max-w-md flex flex-col gap-4 items-center">
-            {renderCampos()}
+          <form
+            onSubmit={handleSubmit}
+            className="w-full max-w-md flex flex-col gap-4 items-center"
+          >
+            {/* ================= FORMULÁRIO: ALUNO ================= */}
+            {tipo === "aluno" && (
+              <>
+                <InputField
+                  label="Nome*"
+                  placeholder="Informe o nome do aluno"
+                  icon="user"
+                  value={formData.nome || ""}
+                  onChange={(e) => handleChange("nome", e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Email*"
+                  type="email"
+                  placeholder="Informe o email institucional"
+                  icon="file"
+                  value={formData.email || ""}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Matrícula*"
+                  placeholder="Informe o número de matrícula"
+                  icon="user"
+                  value={formData.matricula || ""}
+                  onChange={(e) => handleChange("matricula", e.target.value)}
+                  required
+                />
+              </>
+            )}
+
+            {/* ================= FORMULÁRIO: DISCIPLINA ================= */}
+            {tipo === "disciplina" && (
+              <>
+                <InputField
+                  label="Nome da Disciplina*"
+                  placeholder="Informe o nome da disciplina"
+                  icon="file"
+                  value={formData.nome || ""}
+                  onChange={(e) => handleChange("nome", e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Código da Disciplina*"
+                  placeholder="Ex: UESB0123"
+                  icon="file"
+                  value={formData.codigo || ""}
+                  onChange={(e) => handleChange("codigo", e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Créditos*"
+                  type="number"
+                  placeholder="Quantidade de créditos (ex: 4)"
+                  icon="file"
+                  value={formData.creditos || ""}
+                  onChange={(e) => handleChange("creditos", e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Departamento*"
+                  placeholder="Ex: DSCT - Departamento de Ciências..."
+                  icon="file"
+                  value={formData.departamento || ""}
+                  onChange={(e) => handleChange("departamento", e.target.value)}
+                  required
+                />
+              </>
+            )}
+
+            {/* ================= FORMULÁRIO: TURMA ================= */}
+            {tipo === "turma" && (
+              <>
+                <InputField
+                  label="ID da Disciplina*"
+                  type="number"
+                  placeholder="Informe o ID numérico da disciplina"
+                  icon="file"
+                  value={formData.id_disciplina || ""}
+                  onChange={(e) =>
+                    handleChange("id_disciplina", e.target.value)
+                  }
+                  required
+                />
+                <InputField
+                  label="Código da Turma*"
+                  placeholder="Ex: T01"
+                  icon="file"
+                  value={formData.codigo_turma || ""}
+                  onChange={(e) => handleChange("codigo_turma", e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Período Letivo*"
+                  placeholder="Ex: 2026.1"
+                  icon="file"
+                  value={formData.periodo_letivo || ""}
+                  onChange={(e) =>
+                    handleChange("periodo_letivo", e.target.value)
+                  }
+                  required
+                />
+              </>
+            )}
 
             <button
               type="submit"
-              className="w-full mt-6 bg-[#322A6A] text-white text-base py-3 rounded-xl font-bold hover:bg-[#251c61] transition-colors cursor-pointer shadow-md"
+              disabled={loading}
+              className="w-full mt-6 bg-[#322A6A] text-white text-base py-3 rounded-xl font-bold hover:bg-[#251c61] transition-colors cursor-pointer shadow-md disabled:opacity-50"
             >
-              {configuracao.textoBotao}
+              {loading ? "Cadastrando..." : configuracao.textoBotao}
             </button>
           </form>
         </div>
