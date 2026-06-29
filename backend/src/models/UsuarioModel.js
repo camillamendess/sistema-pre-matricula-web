@@ -1,13 +1,26 @@
 const pool = require('../config/database');
+const normalizarEmail = require('../utils/normalizarEmail');
 
 class UsuarioModel {
     static async criarAdmin(nome, email, senhaHash) {
+        const emailNormalizado = normalizarEmail(email);
         const query = `
             INSERT INTO Usuario (nome, email, senha, tipo_usuario)
             VALUES ($1, $2, $3, 1)
             RETURNING id_usuario, nome, email, tipo_usuario
         `;
-        const { rows } = await pool.query(query, [nome, email, senhaHash]);
+        const { rows } = await pool.query(query, [nome, emailNormalizado, senhaHash]);
+        return rows[0];
+    }
+
+    static async criarAluno(nome, email, senhaHash) {
+        const emailNormalizado = normalizarEmail(email);
+        const query = `
+            INSERT INTO Usuario (nome, email, senha, tipo_usuario)
+            VALUES ($1, $2, $3, 2)
+            RETURNING id_usuario, nome, email, tipo_usuario
+        `;
+        const { rows } = await pool.query(query, [nome, emailNormalizado, senhaHash]);
         return rows[0];
     }
 
@@ -43,18 +56,19 @@ class UsuarioModel {
     }
 
     static async buscarPorEmail(email) {
-        const query = 'SELECT * FROM Usuario WHERE email = $1';
-        const { rows } = await pool.query(query, [email]);
+        const query = 'SELECT * FROM Usuario WHERE LOWER(email) = LOWER($1)';
+        const { rows } = await pool.query(query, [normalizarEmail(email)]);
         return rows[0];
     }
 
     static async atualizar(id_usuario, nome, email) {
+        const emailNormalizado = normalizarEmail(email);
         const query = `
             UPDATE Usuario SET nome = $1, email = $2 
             WHERE id_usuario = $3 
             RETURNING id_usuario, nome, email, tipo_usuario
         `;
-        const { rows } = await pool.query(query, [nome, email, id_usuario]);
+        const { rows } = await pool.query(query, [nome, emailNormalizado, id_usuario]);
         return rows[0];
     }
 

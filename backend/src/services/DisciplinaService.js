@@ -4,7 +4,7 @@ class DisciplinaService {
     static async cadastrarDisciplina(codigo, nome, creditos, departamento) {
         const disciplinaExistente = await DisciplinaModel.buscarPorCodigo(codigo);
         if (disciplinaExistente) {
-            throw new Error('Já existe uma disciplina cadastrada com este código.');
+            throw new Error('Ja existe uma disciplina cadastrada com este codigo.');
         }
 
         return await DisciplinaModel.criar(codigo, nome, creditos, departamento);
@@ -17,21 +17,29 @@ class DisciplinaService {
     static async buscarDisciplina(id_disciplina) {
         const disciplina = await DisciplinaModel.buscarPorId(id_disciplina);
         if (!disciplina) {
-            throw new Error('Disciplina não encontrada.');
+            throw new Error('Disciplina nao encontrada.');
         }
         return disciplina;
+    }
+
+    static async listarAlunosDisciplina(id_disciplina) {
+        const disciplina = await DisciplinaModel.buscarPorId(id_disciplina);
+        if (!disciplina) {
+            throw new Error('Disciplina nao encontrada.');
+        }
+
+        return await DisciplinaModel.listarAlunos(id_disciplina);
     }
 
     static async atualizarDisciplina(id_disciplina, codigo, nome, creditos, departamento) {
         const disciplinaAtual = await DisciplinaModel.buscarPorId(id_disciplina);
         if (!disciplinaAtual) {
-            throw new Error('Disciplina não encontrada para atualização.');
+            throw new Error('Disciplina nao encontrada para atualizacao.');
         }
 
-        // Verifica se o novo código já está sendo usado por OUTRA disciplina
         const disciplinaComCodigo = await DisciplinaModel.buscarPorCodigo(codigo);
         if (disciplinaComCodigo && disciplinaComCodigo.id_disciplina !== id_disciplina) {
-            throw new Error('Este código de disciplina já está em uso por outro componente.');
+            throw new Error('Este codigo de disciplina ja esta em uso por outro componente.');
         }
 
         return await DisciplinaModel.atualizar(id_disciplina, codigo, nome, creditos, departamento);
@@ -40,7 +48,7 @@ class DisciplinaService {
     static async excluirDisciplina(id_disciplina) {
         const deletado = await DisciplinaModel.excluir(id_disciplina);
         if (!deletado) {
-            throw new Error('Disciplina não encontrada para exclusão.');
+            throw new Error('Disciplina nao encontrada para exclusao.');
         }
     }
 }

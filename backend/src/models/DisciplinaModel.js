@@ -47,6 +47,28 @@ class DisciplinaModel {
         return rows[0];
     }
 
+    static async listarAlunos(id_disciplina) {
+        const query = `
+            SELECT DISTINCT
+                a.id_aluno,
+                COALESCE(a.nome, u.nome) AS nome,
+                COALESCE(a.email, u.email) AS email,
+                a.matricula,
+                pm.data_solicitacao,
+                t.id_turma,
+                t.codigo_turma,
+                t.periodo_letivo
+            FROM Pre_Matricula pm
+            JOIN Aluno a ON pm.id_aluno = a.id_aluno
+            LEFT JOIN Usuario u ON a.id_usuario = u.id_usuario
+            JOIN Turma t ON pm.id_turma = t.id_turma
+            WHERE t.id_disciplina = $1
+            ORDER BY nome ASC
+        `;
+        const { rows } = await pool.query(query, [id_disciplina]);
+        return rows;
+    }
+
     static async buscarPorCodigo(codigo) {
         const query = 'SELECT * FROM Disciplina WHERE codigo = $1';
         const { rows } = await pool.query(query, [codigo]);

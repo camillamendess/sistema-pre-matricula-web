@@ -9,7 +9,11 @@ export interface PreMatriculaModel {
   matricula?: string;
   codigo_turma?: string;
   periodo_letivo?: string;
+  id_disciplina?: number;
+  codigo_disciplina?: string;
   nome_disciplina?: string;
+  creditos?: number;
+  departamento?: string;
 }
 
 // Interface para o endpoint de relatório

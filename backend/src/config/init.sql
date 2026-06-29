@@ -8,9 +8,52 @@ CREATE TABLE IF NOT EXISTS Usuario (
 
 CREATE TABLE IF NOT EXISTS Aluno (
     id_aluno SERIAL PRIMARY KEY,
-    id_usuario INT NOT NULL REFERENCES Usuario(id_usuario) ON DELETE CASCADE,
+    id_usuario INT REFERENCES Usuario(id_usuario) ON DELETE SET NULL,
+    nome VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     matricula VARCHAR(100) UNIQUE NOT NULL
 );
+
+ALTER TABLE Aluno
+    ADD COLUMN IF NOT EXISTS id_usuario INT REFERENCES Usuario(id_usuario) ON DELETE SET NULL;
+
+ALTER TABLE Aluno
+    ADD COLUMN IF NOT EXISTS nome VARCHAR(255);
+
+ALTER TABLE Aluno
+    ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+
+ALTER TABLE Aluno
+    ALTER COLUMN id_usuario DROP NOT NULL;
+
+UPDATE Aluno a
+SET nome = u.nome
+FROM Usuario u
+WHERE a.id_usuario = u.id_usuario
+  AND a.nome IS NULL;
+
+UPDATE Aluno a
+SET email = u.email
+FROM Usuario u
+WHERE a.id_usuario = u.id_usuario
+  AND a.email IS NULL;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'aluno_email_key'
+    ) THEN
+        ALTER TABLE Aluno ADD CONSTRAINT aluno_email_key UNIQUE (email);
+    END IF;
+END $$;
+
+CREATE UNIQUE INDEX IF NOT EXISTS usuario_email_lower_key
+ON Usuario (LOWER(email));
+
+CREATE UNIQUE INDEX IF NOT EXISTS aluno_email_lower_key
+ON Aluno (LOWER(email))
+WHERE email IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS Disciplina (
     id_disciplina SERIAL PRIMARY KEY,

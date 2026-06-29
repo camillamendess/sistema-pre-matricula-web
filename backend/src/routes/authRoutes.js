@@ -10,5 +10,6 @@ router.post('/login', AuthController.login);
 // Rota para o Primeiro Acesso do Aluno
 // JSON esperado no corpo da requisição (body): { "email": "..." }
 router.post('/primeiro-acesso', AuthController.primeiroAcesso);
+router.post('/definir-senha', AuthController.definirSenha);
 
 module.exports = router;

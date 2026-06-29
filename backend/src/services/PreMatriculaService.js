@@ -25,6 +25,10 @@ class PreMatriculaService {
         return await PreMatriculaModel.listarTodas();
     }
 
+    static async listarPreMatriculasPorAluno(id_aluno) {
+        return await PreMatriculaModel.listarPorAluno(id_aluno);
+    }
+
     static async cancelarPreMatricula(id_pre_matricula) {
         const deletado = await PreMatriculaModel.excluir(id_pre_matricula);
         if (!deletado) throw new Error('Pré-matrícula não encontrada para exclusão.');

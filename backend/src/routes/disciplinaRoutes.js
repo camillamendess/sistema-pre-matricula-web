@@ -5,6 +5,7 @@ const { autenticarToken, autorizarAdmin, autorizarAutenticado } = require('../mi
 const router = express.Router();
 
 router.get('/', autenticarToken, autorizarAutenticado, DisciplinaController.listar);
+router.get('/:id/alunos', autenticarToken, autorizarAdmin, DisciplinaController.listarAlunos);
 router.get('/:id', autenticarToken, autorizarAutenticado, DisciplinaController.buscar);
 router.post('/', autenticarToken, autorizarAdmin, DisciplinaController.cadastrar);
 router.put('/:id', autenticarToken, autorizarAdmin, DisciplinaController.atualizar);

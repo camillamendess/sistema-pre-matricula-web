@@ -9,6 +9,15 @@ interface TurmaFiltros {
   codigo_disciplina?: string;
 }
 
+export interface AlunoTurma {
+  id_pre_matricula: number;
+  data_solicitacao?: string;
+  id_aluno: number;
+  nome: string;
+  email: string;
+  matricula: string;
+}
+
 function buildQuery(params: object): string {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -35,6 +44,10 @@ export class TurmaController {
 
   static async buscar(id: number): Promise<TurmaModel> {
     return request<TurmaModel>(`/turmas/${id}`);
+  }
+
+  static async listarAlunos(id: number): Promise<AlunoTurma[]> {
+    return request<AlunoTurma[]>(`/turmas/${id}/alunos`);
   }
 
   static async atualizar(id: number, dados: Partial<TurmaModel>): Promise<{ mensagem: string, turma: TurmaModel }> {

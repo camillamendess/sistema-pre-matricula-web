@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import PagesLayout from "../layouts/PagesLayout";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import { AlunoController } from "../controllers/AlunoController";
 import { DisciplinaController } from "../controllers/DisciplinaController";
@@ -19,6 +20,7 @@ interface ConsultaAdminProps {
 
 export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -105,6 +107,26 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
 
   const resultados = dadosFiltrados();
 
+  const abrirDetalhe = (item: any) => {
+    if (tipo === "alunos") {
+      navigate(`/alunos/${item.id_aluno}`);
+    } else if (tipo === "disciplinas") {
+      navigate(`/disciplinas/${item.id_disciplina}`);
+    } else if (tipo === "turmas") {
+      navigate(`/turmas/${item.id_turma}`);
+    }
+  };
+
+  const editarItem = (item: any) => {
+    if (tipo === "alunos") {
+      navigate(`/alunos/${item.id_aluno}`);
+    } else if (tipo === "disciplinas") {
+      navigate(`/admin/editar-disciplina/${item.id_disciplina}`);
+    } else if (tipo === "turmas") {
+      navigate(`/admin/editar-turma/${item.id_turma}`);
+    }
+  };
+
   const handleAbrirModalExclusao = (item: any) => {
     setItemParaExcluir(item);
     setIsModalOpen(true);
@@ -157,6 +179,7 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
 
   const userType =
     tipo === "alunos" ? "admin" : user?.tipo_usuario === 1 ? "admin" : "aluno";
+  const podeGerenciar = user?.tipo_usuario === 1;
 
   return (
     <PagesLayout
@@ -203,28 +226,40 @@ export default function ConsultaAdmin({ tipo }: ConsultaAdminProps) {
                     key={index}
                     className="flex items-center justify-between py-3.5 px-4 rounded-xl border-b border-gray-200/60 last:border-none transition-colors text-[#322A6A] hover:bg-gray-200"
                   >
-                    <span className="font-semibold text-sm md:text-base">
+                    <button
+                      type="button"
+                      onClick={() => abrirDetalhe(item)}
+                      className={`font-semibold text-sm md:text-base text-left ${
+                        tipo === "alunos" || tipo === "disciplinas" || tipo === "turmas"
+                          ? "cursor-pointer hover:underline"
+                          : "cursor-default"
+                      }`}
+                    >
                       {tipo === "alunos" && item.nome}
                       {tipo === "disciplinas" && item.nome}
                       {tipo === "turmas" &&
                         `Turma ${item.codigo_turma} - ${item.nome_disciplina || "Sem Nome"}`}
-                    </span>
+                    </button>
 
                     <div className="flex items-center gap-5">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleAbrirModalExclusao(item)}
-                          className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                        <button
-                          onClick={() => handleAbrirModalEdicao(item)}
-                          className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]"
-                        >
-                          <Pencil size={18} />
-                        </button>
-                      </div>
+                      {podeGerenciar && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleAbrirModalExclusao(item)}
+                            className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]"
+                            title="Excluir"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                          <button
+                            onClick={() => editarItem(item)}
+                            className="p-1 cursor-pointer transition-transform text-[#322A6A] hover:text-[#000000]"
+                            title="Editar"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                        </div>
+                      )}
 
                       <span className="font-mono text-sm min-w-24 text-right text-[#322A6A]">
                         {tipo === "alunos" && item.matricula}
