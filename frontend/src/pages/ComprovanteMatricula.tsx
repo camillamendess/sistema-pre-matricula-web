@@ -53,7 +53,7 @@ export default function ComprovanteMatricula() {
               <div>
                 <h3 className="text-xl font-bold">Comprovante de Matricula</h3>
                 <p className="text-sm text-[#332a6ad0] mt-1">
-                  Sistema Academico de Pre Matricula
+                  Sistema Academico de Pré-Matrícula
                 </p>
               </div>
               <button
