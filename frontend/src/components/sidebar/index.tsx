@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // 1. Importe o useLocation
 import LogoUesb from "../../assets/uesb-logo-2.png";
 
 interface SidebarProps {
@@ -7,19 +7,22 @@ interface SidebarProps {
 
 export default function Sidebar({ role }: SidebarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const alunoItems = [
-    { label: "Realizar Pré Matrícula", active: true, linkTo: "/matricular" },
-    { label: "Visualizar Pré Matrícula", active: false, linkTo: "/matriculas" },
-    { label: "Disciplinas disponíveis", active: false, linkTo: "/disciplinas" },
-    { label: "Dados Cadastrais", active: false, linkTo: "/perfil" },
+    { label: "Início", linkTo: "/home" },
+    { label: "Realizar Pré Matrícula", linkTo: "/matricular" },
+    { label: "Visualizar Pré Matrícula", linkTo: "/matriculas" },
+    { label: "Disciplinas disponíveis", linkTo: "/disciplinas" },
+    { label: "Dados Cadastrais", linkTo: "/perfil" },
   ];
 
   const adminItems = [
-    { label: "Alunos", active: true, linkTo: "/alunos" },
-    { label: "Disciplinas", active: false, linkTo: "/disciplinas" },
-    { label: "Turmas", active: false, linkTo: "/turmas" },
-    { label: "Relatórios", active: false, linkTo: "/relatorios" },
+    { label: "Início", linkTo: "/admin" },
+    { label: "Alunos", linkTo: "/alunos" },
+    { label: "Disciplinas", linkTo: "/disciplinas" },
+    { label: "Turmas", linkTo: "/turmas" },
+    { label: "Relatórios", linkTo: "/relatorios" },
   ];
 
   const menuItems = role === "admin" ? adminItems : alunoItems;
@@ -37,17 +40,21 @@ export default function Sidebar({ role }: SidebarProps) {
       </div>
 
       <nav className="flex-1 mt-6 flex flex-col">
-        {menuItems.map((item, index) => (
-          <button
-            key={index}
-            onClick={() => handleClick(item.linkTo)}
-            className={`w-full text-center px-6 py-3.5 text-sm font-medium border-b border-white transition-colors cursor-pointer
-              ${index === 0 ? "border-t border-t-white" : ""}
-              ${item.active ? "bg-white/10 font-bold" : "hover:bg-white/5"}`}
-          >
-            {item.label}
-          </button>
-        ))}
+        {menuItems.map((item, index) => {
+          const isItemActive = location.pathname === item.linkTo;
+
+          return (
+            <button
+              key={index}
+              onClick={() => handleClick(item.linkTo)}
+              className={`w-full text-center px-6 py-3.5 text-sm font-medium border-b border-white transition-colors cursor-pointer
+                ${index === 0 ? "border-t border-t-white" : ""}
+                ${isItemActive ? "bg-white/10 font-bold" : "hover:bg-white/5"}`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
     </div>
   );
