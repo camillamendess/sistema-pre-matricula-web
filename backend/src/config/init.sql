@@ -86,3 +86,145 @@ VALUES (
     1
 )
 ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO Usuario (nome, email, senha, tipo_usuario)
+VALUES
+(
+    'Ana Souza',
+    '202210561@uesb.edu.br',
+    '$2b$10$W7F3mu4AEwfELtJfJAogZOTuPOA8fAGnc8/DZA1woZloRcvI0YBDq',
+    2
+),
+(
+    'Carlos Oliveira',
+    '202310845@uesb.edu.br',
+    '$2b$10$W7F3mu4AEwfELtJfJAogZOTuPOA8fAGnc8/DZA1woZloRcvI0YBDq',
+    2
+),
+(
+    'Mariana Santos',
+    '202410921@uesb.edu.br',
+    '$2b$10$W7F3mu4AEwfELtJfJAogZOTuPOA8fAGnc8/DZA1woZloRcvI0YBDq',
+    2
+)
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO Aluno (id_usuario, nome, email, matricula)
+SELECT
+    id_usuario,
+    nome,
+    email,
+    matricula
+FROM (
+    SELECT
+        id_usuario,
+        nome,
+        email,
+        '202210561' AS matricula
+    FROM Usuario
+    WHERE email = '202210561@uesb.edu.br'
+
+    UNION ALL
+
+    SELECT
+        id_usuario,
+        nome,
+        email,
+        '202310845' AS matricula
+    FROM Usuario
+    WHERE email = '202310845@uesb.edu.br'
+
+    UNION ALL
+
+    SELECT
+        id_usuario,
+        nome,
+        email,
+        '202410921' AS matricula
+    FROM Usuario
+    WHERE email = '202410921@uesb.edu.br'
+
+) AS alunos
+ON CONFLICT (matricula) DO NOTHING;
+
+
+INSERT INTO Disciplina
+(codigo, nome, creditos, departamento)
+VALUES
+(
+    'COMP101',
+    'Programação I',
+    4,
+    'Departamento de Ciências Exatas e da Terra (DCET)'
+),
+(
+    'COMP202',
+    'Banco de Dados',
+    4,
+    'Departamento de Ciências Exatas e da Terra (DCET)'
+),
+(
+    'COMP303',
+    'Desenvolvimento Web',
+    4,
+    'Departamento de Ciências Exatas e da Terra (DCET)'
+),
+(
+    'COMP404',
+    'Engenharia de Software',
+    3,
+    'Departamento de Ciências Exatas e da Terra (DCET)'
+)
+ON CONFLICT (codigo) DO NOTHING;
+
+
+INSERT INTO Turma
+(id_disciplina, codigo_turma, periodo_letivo)
+
+SELECT
+    id_disciplina,
+    codigo_turma,
+    periodo_letivo
+FROM (
+
+    SELECT
+        id_disciplina,
+        'T01' AS codigo_turma,
+        '2026.1' AS periodo_letivo
+    FROM Disciplina
+    WHERE codigo = 'COMP101'
+
+
+    UNION ALL
+
+
+    SELECT
+        id_disciplina,
+        'T01',
+        '2026.1'
+    FROM Disciplina
+    WHERE codigo = 'COMP202'
+
+
+    UNION ALL
+
+
+    SELECT
+        id_disciplina,
+        'T02',
+        '2026.1'
+    FROM Disciplina
+    WHERE codigo = 'COMP303'
+
+
+    UNION ALL
+
+
+    SELECT
+        id_disciplina,
+        'T01',
+        '2026.1'
+    FROM Disciplina
+    WHERE codigo = 'COMP404'
+
+) AS turmas;
